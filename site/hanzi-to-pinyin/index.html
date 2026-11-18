@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanzi to Pinyin — Chinese to Pinyin Converter with Tone Marks</title>
+<meta name="description" content="Convert Chinese characters and hanzi to pinyin with correct tone marks. Handles 多音字 polyphones by word context — 银行 reads yínháng, 音乐 reads yīnyuè. Free, private, runs in your browser.">
+<link rel="canonical" href="https://chinesenamehelper.com/hanzi-to-pinyin/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hanzi to Pinyin — Chinese to Pinyin Converter with Tone Marks">
+<meta property="og:description" content="Convert Chinese characters and hanzi to pinyin with correct tone marks. Handles 多音字 polyphones by word context — 银行 reads yínháng, 音乐 reads yīnyuè. Free, private, runs in your browser.">
+<meta property="og:url" content="https://chinesenamehelper.com/hanzi-to-pinyin/">
+<meta property="og:site_name" content="Chinese Name Helper">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hanzi to Pinyin — Chinese to Pinyin Converter with Tone Marks">
+<meta name="twitter:description" content="Convert Chinese characters and hanzi to pinyin with correct tone marks. Handles 多音字 polyphones by word context — 银行 reads yínháng, 音乐 reads yīnyuè. Free, private, runs in your browser.">
+<meta property="og:image" content="https://chinesenamehelper.com/assets/og/tool-hanzi-to-pinyin.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hanzi to Pinyin — Chinese to Pinyin Converter with Tone Marks">
+<meta name="twitter:image" content="https://chinesenamehelper.com/assets/og/tool-hanzi-to-pinyin.png">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Hanzi to Pinyin Converter",
+      "url": "https://chinesenamehelper.com/hanzi-to-pinyin/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Converts Chinese hanzi to pinyin with tone marks, resolving polyphonic characters by word context.",
+      "featureList": ["Tone marks", "Word-context polyphone resolution", "Per-character meanings", "Copyable output"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why do some characters change their pinyin?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Many hanzi are polyphonic: 行 is xíng in 行走 (to walk) but háng in 银行 (bank). A converter that works character by character gets these wrong, so this one segments your text into words first and looks up the whole word." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my text uploaded anywhere?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Segmentation and conversion run entirely in your browser. Nothing you paste is sent, stored or logged." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  .py-tool {
+    background:#fff; border:1px solid var(--line);
+    border-radius:14px; box-shadow:var(--shadow-sm);
+    padding:26px; margin-bottom:26px; position:relative;
+  }
+  .py-tool::before {
+    content:""; position:absolute; left:22px; right:22px; top:0; height:2px;
+    border-radius:0 0 2px 2px;
+    background:var(--cinnabar); opacity:.7;
+  }
+  .py-io { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .py-io > * { min-width:0; }
+  .py-io textarea { min-height:180px; font-size:17px; }
+  /* Two 1fr columns with a textarea and a scroll box collapse to ~123px each
+     on a phone. Stack them instead of squeezing the pinyin. */
+  @media (max-width:760px) {
+    .py-io { grid-template-columns:1fr; }
+    .py-out { font-size:17px; min-height:150px; }
+    .py-io textarea { min-height:150px; }
+    .py-tool { padding:20px 17px; }
+  }
+  .py-out {
+    min-height:180px; background:var(--paper-2); border:1px solid var(--line);
+    border-radius:var(--radius-sm); padding:16px 18px; overflow-y:auto;
+    font-size:19px; line-height:2.35; color:var(--ink);
+  }
+  .py-out ruby { ruby-position:over; }
+  .py-out rt { font-size:11px; color:var(--cinnabar); letter-spacing:.02em; font-weight:600; }
+  .py-word { margin:0 2px; }
+  .py-bar { display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-top:16px; }
+  .py-stats { font-size:12.5px; color:var(--ink-mute); flex:1; }
+  .py-plain-row { margin-top:16px; }
+  .py-plain-row textarea { min-height:88px; font-size:14px; font-family:var(--mono); color:var(--ink-soft); background:var(--card); }
+  .py-examples { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; padding-top:15px; border-top:1px dashed var(--line-2); }
+  .py-examples button { font-size:12.5px; padding:5px 13px; }
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/"><img class="brand-mark" src="/assets/img/mark.svg" width="34" height="34" alt="" aria-hidden="true"><span class="brand-name">Chinese Name Helper</span></a>
+    <nav class="site-nav">
+      <a href="/">Name generator</a>
+      <a href="/my-name-in-chinese/">My name in Chinese</a>
+      <a href="/hanzi-to-pinyin/">Hanzi to pinyin</a>
+      <a href="/stroke-order/">Stroke order</a>
+      <a href="/characters/">Characters</a>
+      <a href="/gifts/">Carriers</a>
+    </nav>
+    <details class="lang-menu">
+      <summary aria-label="English"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18" stroke="currentColor" stroke-width="1.5"/></svg><span>English</span></summary>
+      <div class="lang-list">
+        <a href="/hanzi-to-pinyin/" hreflang="en" lang="en" aria-current="true">English</a>
+        <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+        <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+        <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">Hanzi to pinyin</div>
+    <h1 class="hero-title">Chinese to pinyin, <span class="accent">with the tones right</span></h1>
+    <p class="hero-sub">Paste Chinese text and get pinyin with tone marks. Characters that change their reading by word — 行, 长, 音乐 — are resolved by context, not guessed per character.</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="py-tool pull-up">
+    <div class="py-io">
+      <div class="field">
+        <label for="pinyin-in">Chinese text</label>
+        <textarea id="pinyin-in" placeholder="Paste or type Chinese here…" spellcheck="false"></textarea>
+      </div>
+      <div class="field">
+        <label>Pinyin with tone marks</label>
+        <div class="py-out" id="pinyin-out" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="py-bar">
+      <button class="btn-ghost btn-sm" id="pinyin-sample">Try an example</button>
+      <button class="btn-ghost btn-sm" id="pinyin-clear">Clear</button>
+      <span class="py-stats" id="pinyin-stats"></span>
+      <button class="btn-ghost btn-sm" id="pinyin-copy">Copy pinyin</button>
+    </div>
+    <div class="py-plain-row field">
+      <label for="pinyin-plain">Plain pinyin (for pasting)</label>
+      <textarea id="pinyin-plain" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="py-examples">
+      <span style="font-size:12px;color:var(--ink-mute);align-self:center">Hard cases:</span>
+      <button class="btn-ghost btn-sm" onclick="document.getElementById('pinyin-in').value='银行行长在大厅行走';document.getElementById('pinyin-in').dispatchEvent(new Event('input'))">银行 · 行走</button>
+      <button class="btn-ghost btn-sm" onclick="document.getElementById('pinyin-in').value='我觉得音乐比快乐重要';document.getElementById('pinyin-in').dispatchEvent(new Event('input'))">音乐 · 快乐</button>
+      <button class="btn-ghost btn-sm" onclick="document.getElementById('pinyin-in').value='他的哥哥长大了，会教书法了';document.getElementById('pinyin-in').dispatchEvent(new Event('input'))">长大 · 教书</button>
+    </div>
+  </div>
+
+  <section class="section" style="border-top:none;margin-top:8px;padding-top:34px">
+    <h2>How the converter decides the reading</h2>
+    <p class="lede">A character-by-character lookup fails on the most common words in the language. The fix is to read phrases, not characters.</p>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="ico">词</div>
+        <h3>Words first</h3>
+        <p>Your text is segmented into words before any lookup. 银行 is looked up as a whole word, so it gets yínháng — not the yíngxíng a character-by-character converter produces.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">声</div>
+        <h3>Tone marks, not numbers</h3>
+        <p>Output uses real tone marks: mā má mǎ mà. Hover any character to see its reading and meaning from the site's character library.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">隐</div>
+        <h3>Nothing is uploaded</h3>
+        <p>Everything runs in your browser. Long texts, private messages, exam drafts — paste freely; nothing is sent or stored.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">名</div>
+        <h3>Made for names too</h3>
+        <p>Generated a Chinese name? Paste it here to confirm the reading, then follow each character to its stroke-order animation and practice sheet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-bottom:56px">
+    <h2 style="font-family:var(--serif);font-size:24px">Common questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Why do some characters change their pinyin?</summary>
+        <p>Many hanzi are polyphonic — the same character carries two or more readings depending on the word it sits in. 行 is xíng in 行走 but háng in 银行; 长 is zhǎng in 长大 but cháng in 长度. This converter segments text into words first and looks up the whole word.</p>
+      </details>
+      <details>
+        <summary>Is my text uploaded anywhere?</summary>
+        <p>No. Segmentation and conversion run entirely in your browser. Nothing you paste is sent, stored or logged.</p>
+      </details>
+      <details>
+        <summary>Does it work for names?</summary>
+        <p>Yes — paste the name you generated on the home page and every character gets its reading with tone marks, which is exactly what you hand to a teacher or write on a name card.</p>
+      </details>
+      <details>
+        <summary>What does the question mark mean?</summary>
+        <p>A character outside the built-in table. Rather than guessing a reading and being confidently wrong, the converter marks it honestly. Rarer characters will gain coverage as the library grows.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+                    <div class="foot-col">
+      <h5>Tools</h5>
+      <a href="/">Name generator</a>
+      <a href="/my-name-in-chinese/">My name in Chinese</a>
+      <a href="/hanzi-to-pinyin/">Hanzi to pinyin</a>
+      <a href="/stroke-order/">Stroke order</a>
+      <a href="/characters/">Characters</a>
+      <a href="/gifts/">Carriers</a>
+    </div>
+        <div class="foot-col">
+      <h5>Learn</h5>
+      <a href="/#how">How the naming works</a>
+      <a href="/#generator">Generate a name</a>
+    </div>
+<div class="foot-legal">
+      <div class="brand"><img class="brand-mark" src="/assets/img/mark.svg" width="34" height="34" alt="" aria-hidden="true"><span class="brand-name">Chinese Name Helper</span></div>
+      <p>© <span id="yr">2026</span> Chinese Name Helper · <a href="https://chinesenamehelper.com/">chinesenamehelper.com</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/data/pinyin-table.js"></script>
+<script src="/assets/data/characters.js"></script>
+<script src="/assets/data/characters2.js"></script>
+<!-- pinyin-pro must load before pinyin.js, which detects window.pinyinPro -->
+<script src="/assets/lib/pinyin-pro.min.js"></script>
+<script src="/assets/js/pinyin.js"></script>
+<script src="/assets/js/app-foot.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chinese Stroke Order — Animated Hanzi Writing Practice</title>
+<meta name="description" content="See the stroke order of any Chinese character animated stroke by stroke, then print a practice sheet. Type a character — including the ones in your Chinese name — and watch it write itself.">
+<link rel="canonical" href="https://chinesenamehelper.com/stroke-order/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chinese Stroke Order — Animated Hanzi Writing Practice">
+<meta property="og:description" content="See the stroke order of any Chinese character animated stroke by stroke, then print a practice sheet. Type a character — including the ones in your Chinese name — and watch it write itself.">
+<meta property="og:url" content="https://chinesenamehelper.com/stroke-order/">
+<meta property="og:site_name" content="Chinese Name Helper">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chinese Stroke Order — Animated Hanzi Writing Practice">
+<meta name="twitter:description" content="See the stroke order of any Chinese character animated stroke by stroke, then print a practice sheet. Type a character — including the ones in your Chinese name — and watch it write itself.">
+<meta property="og:image" content="https://chinesenamehelper.com/assets/og/tool-stroke-order.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Chinese Stroke Order — Animated Hanzi Writing Practice">
+<meta name="twitter:image" content="https://chinesenamehelper.com/assets/og/tool-stroke-order.png">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Chinese Stroke Order Animator",
+      "url": "https://chinesenamehelper.com/stroke-order/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Animated stroke order for Chinese characters with printable practice sheets.",
+      "featureList": ["Stroke-by-stroke animation", "Radical highlighting", "Outlined practice grid", "Printable worksheet"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What order are Chinese strokes written in?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The standard rules are: top to bottom, left to right, horizontal before vertical, outside before inside, and close a box last. The animation shows the exact order for each character rather than asking you to apply the rules by eye." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does stroke order matter if the character looks the same?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It matters for three reasons: handwriting speed and legibility, the ability to read cursive where strokes are joined, and character lookup in dictionaries that index by stroke count and order." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  .so-tool {
+    background:#fff; border:1px solid var(--line);
+    border-radius:14px; box-shadow:var(--shadow-sm);
+    padding:26px; margin-bottom:26px; position:relative;
+  }
+  .so-tool::before {
+    content:""; position:absolute; left:22px; right:22px; top:0; height:2px;
+    border-radius:0 0 2px 2px;
+    background:var(--cinnabar); opacity:.7;
+  }
+  .so-input-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+  .so-input-row .field { flex:1; min-width:200px; }
+  .so-input-row input { font-size:23px; text-align:center; letter-spacing:.16em; font-family:var(--serif); }
+  .so-grid { display:flex; flex-wrap:wrap; gap:16px; margin-top:22px; }
+  .so-cell {
+    width:172px; background:var(--card); border:1px solid var(--line);
+    border-radius:var(--radius); padding:11px; position:relative;
+    transition:border-color .18s, box-shadow .18s;
+  }
+  .so-cell:hover { border-color:rgba(178,58,42,.38); box-shadow:var(--shadow-md); }
+  /* The stage is the practice grid a learner copies from, so it carries the
+     diagonals as well as the quarter rules — the same 米字格 as the result card
+     and the printable sheet, not a bare 田字格 square. */
+  .so-cell .stage {
+    width:148px; height:148px; position:relative; margin:0 auto;
+    background:
+      linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0/50% 100%,
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px) 0 0/100% 50%,
+      linear-gradient(to bottom right, transparent calc(50% - .5px), var(--line) calc(50% - .5px), var(--line) calc(50% + .5px), transparent calc(50% + .5px)) 0 0/100% 100%,
+      linear-gradient(to bottom left, transparent calc(50% - .5px), var(--line) calc(50% - .5px), var(--line) calc(50% + .5px), transparent calc(50% + .5px)) 0 0/100% 100%,
+      var(--paper-glow);
+    border-radius:2px;
+  }
+  .so-cell .meta { text-align:center; font-size:12px; color:var(--ink-mute); margin-top:9px; }
+  .so-cell .meta b { color:var(--ink); font-family:var(--serif); font-size:18px; font-weight:600; }
+  .so-cell .meta .py { color:var(--cinnabar); font-weight:600; letter-spacing:.04em; }
+  .so-cell .acts { display:flex; gap:5px; justify-content:center; margin-top:8px; }
+  .so-cell .acts button {
+    font-size:11px; padding:4px 10px; border:1px solid var(--line); background:var(--card);
+    border-radius:2px; cursor:pointer; color:var(--ink-soft); font-family:var(--sans);
+    transition:.16s;
+  }
+  .so-cell .acts button:hover { background:var(--cinnabar); border-color:var(--cinnabar); color:var(--card); }
+  .so-note { font-size:12.5px; color:var(--ink-mute); margin-top:16px; }
+  .so-rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:22px; }
+  .so-rule {
+    background:var(--card); border:1px solid var(--line);
+    border-radius:var(--radius); padding:16px 17px;
+    transition:border-color .18s, box-shadow .18s;
+  }
+  .so-rule:hover { border-color:rgba(178,58,42,.38); box-shadow:var(--shadow-sm); }
+  .so-rule b { font-family:var(--serif); font-size:17px; display:block; margin-bottom:5px; color:var(--cinnabar); }
+  .so-rule span { font-size:13px; color:var(--ink-soft); line-height:1.55; }
+  @media (max-width:760px) { .so-tool { padding:20px 17px; } }
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/"><img class="brand-mark" src="/assets/img/mark.svg" width="34" height="34" alt="" aria-hidden="true"><span class="brand-name">Chinese Name Helper</span></a>
+    <nav class="site-nav">
+      <a href="/">Name generator</a>
+      <a href="/my-name-in-chinese/">My name in Chinese</a>
+      <a href="/hanzi-to-pinyin/">Hanzi to pinyin</a>
+      <a href="/stroke-order/">Stroke order</a>
+      <a href="/characters/">Characters</a>
+      <a href="/gifts/">Carriers</a>
+    </nav>
+    <details class="lang-menu">
+      <summary aria-label="English"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18" stroke="currentColor" stroke-width="1.5"/></svg><span>English</span></summary>
+      <div class="lang-list">
+        <a href="/stroke-order/" hreflang="en" lang="en" aria-current="true">English</a>
+        <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+        <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+        <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">Stroke order</div>
+    <h1 class="hero-title">Watch the character <span class="accent">write itself</span></h1>
+    <p class="hero-sub">Type any Chinese character — one from your generated name, or a word you keep getting wrong — and see every stroke in order, then print the grid to practise on paper.</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="so-tool pull-up">
+    <div class="so-input-row">
+      <div class="field">
+        <label for="so-in">Characters</label>
+        <input type="text" id="so-in" maxlength="12" placeholder="名字" value="名字" spellcheck="false">
+      </div>
+      <button class="btn-ghost btn-sm" id="so-anim" style="margin-bottom:1px">Animate all</button>
+      <button class="btn-ghost btn-sm" id="so-print" style="margin-bottom:1px">Print practice sheet</button>
+    </div>
+    <div class="so-grid" id="so-grid"></div>
+    <p class="so-note">Click a square to replay that character. The pale outline is the target shape; the dark stroke is the current one.</p>
+  </div>
+
+  <section class="section" style="border-top:none;margin-top:8px;padding-top:34px">
+    <h2>Five rules that cover most characters</h2>
+    <p class="lede">Stroke order is not memorised character by character — a handful of rules handles the majority, and the animation shows where the exceptions lie.</p>
+    <div class="so-rules">
+      <div class="so-rule"><b>先横后竖</b><span>Horizontal before vertical. 十 is written across, then down.</span></div>
+      <div class="so-rule"><b>先撇后捺</b><span>Left-falling before right-falling. 人 opens out from the left.</span></div>
+      <div class="so-rule"><b>从上到下</b><span>Top to bottom. 三 is written from the top bar down.</span></div>
+      <div class="so-rule"><b>从左到右</b><span>Left to right. 川 moves across, stroke by stroke.</span></div>
+      <div class="so-rule"><b>先外后内</b><span>Outside before inside, and the closing stroke last. 国 finishes with its bottom edge.</span></div>
+    </div>
+  </section>
+
+  <section style="margin-bottom:56px">
+    <h2 style="font-family:var(--serif);font-size:24px">Why it matters</h2>
+    <div class="faq">
+      <details>
+        <summary>Why does stroke order matter if the finished character looks the same?</summary>
+        <p>Three practical reasons. Handwriting speed and legibility both depend on it — a character written in the wrong order tends to come out lopsided at speed. Reading cursive depends on it, because joined strokes only make sense in the standard sequence. And dictionary lookup by stroke count assumes you know the order.</p>
+      </details>
+      <details>
+        <summary>What order are strokes written in?</summary>
+        <p>Top to bottom, left to right, horizontal before vertical, outside before inside, and the closing stroke of an enclosure last. The animation shows the exact sequence for each character rather than asking you to apply the rules by eye.</p>
+      </details>
+      <details>
+        <summary>Can I print a practice sheet?</summary>
+        <p>Yes — the print button lays out the characters in a grid with the pale target and empty cells beside each, which is the standard worksheet format used in Chinese primary schools.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+                    <div class="foot-col">
+      <h5>Tools</h5>
+      <a href="/">Name generator</a>
+      <a href="/my-name-in-chinese/">My name in Chinese</a>
+      <a href="/hanzi-to-pinyin/">Hanzi to pinyin</a>
+      <a href="/stroke-order/">Stroke order</a>
+      <a href="/characters/">Characters</a>
+      <a href="/gifts/">Carriers</a>
+    </div>
+        <div class="foot-col">
+      <h5>Learn</h5>
+      <a href="/#how">How the naming works</a>
+      <a href="/#generator">Generate a name</a>
+    </div>
+<div class="foot-legal">
+      <div class="brand"><img class="brand-mark" src="/assets/img/mark.svg" width="34" height="34" alt="" aria-hidden="true"><span class="brand-name">Chinese Name Helper</span></div>
+      <p>Stroke data from the Make Me a Hanzi dataset (Arphic Public License). © <span id="yr">2026</span> Chinese Name Helper · <a href="https://chinesenamehelper.com/">chinesenamehelper.com</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/lib/hanzi-writer.min.js"></script>
+<script src="/assets/data/pinyin-table.js"></script>
+<script src="/assets/data/characters.js"></script>
+<script src="/assets/data/characters2.js"></script>
+<script src="/assets/js/stroke.js"></script>
+<script src="/assets/js/app-foot.js"></script>
+</body>
+</html>
