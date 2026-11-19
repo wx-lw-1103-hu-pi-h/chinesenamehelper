@@ -18,33 +18,26 @@ const path = require('path');
 const i18n = require('./_i18n/index.cjs');
 const { EN_ONLY, ORIGIN, langSwitch } = i18n;
 const en = require('./_i18n/ui/en.cjs');
+const { u } = require('./_assets.cjs');
+/* The English tool pages use the shared nav too. For code='en' the markers are
+   never emitted — the target is already in the reader's language — but going
+   through the same function means there is no second list of six anchors to
+   drift out of order. */
+const { navFor, footTools } = require('./_nav.cjs');
 const OG = require('./_og.cjs');
 
 const ROOT = path.join(__dirname, 'site');
-
-/* Same six entries, same order, as the generated header. */
-const NAV = [
-  ['/', en['nav.generator']],
-  ['/my-name-in-chinese/', en['nav.myname']],
-  ['/hanzi-to-pinyin/', en['nav.pinyin']],
-  ['/stroke-order/', en['nav.stroke']],
-  ['/characters/', en['nav.characters']],
-  ['/gifts/', en['nav.gifts']]
-];
 
 const BRAND = 'Chinese Name Helper';
 const MARK = '<img class="brand-mark" src="/assets/img/mark.svg" width="34" height="34" alt="" aria-hidden="true">';
 
 function headerFor(pagePath, eol) {
-  const nav = NAV.map(function (n) {
-    return '      <a href="' + n[0] + '">' + n[1] + '</a>';
-  }).join(eol);
   return [
     '<header class="site-head">',
     '  <div class="wrap">',
     '    <a class="brand" href="/">' + MARK + '<span class="brand-name">' + BRAND + '</span></a>',
     '    <nav class="site-nav">',
-    nav,
+    navFor('en', en),
     '    </nav>',
     '    ' + langSwitch('en', pagePath),
     '  </div>',
@@ -55,13 +48,10 @@ function headerFor(pagePath, eol) {
 /* The footer keeps each page's own legal line; only the first column is
    rewritten, because that is the one that lists the tools. */
 function toolsColumn(eol) {
-  const links = NAV.map(function (n) {
-    return '      <a href="' + n[0] + '">' + n[1] + '</a>';
-  }).join(eol);
   return [
     '    <div class="foot-col">',
     '      <h5>' + en['foot.tools'] + '</h5>',
-    links,
+    footTools('en', en),
     '    </div>'
   ].join(eol);
 }
@@ -130,7 +120,15 @@ for (const pagePath of EN_ONLY) {
     const colStart = foot.indexOf('<div class="foot-col">');
     const colEnd = foot.indexOf('</div>', colStart);
     if (colStart >= 0 && colEnd >= 0) {
-      foot = foot.slice(0, colStart) + toolsColumn('\n') + foot.slice(colEnd + '</div>'.length);
+      /* colStart sits after the indentation that introduced the old column.
+         Splicing the replacement in at that offset would keep those spaces and
+         then add the block's own indent, so the opening tag ends up at column
+         36 while every sibling is at column 4. Step back over the run of
+         whitespace so the new block starts its own line. */
+      let from = colStart;
+      while (from > 0 && (foot[from - 1] === ' ' || foot[from - 1] === '\t')) from--;
+      if (foot[from - 1] === '\n') from--;
+      foot = foot.slice(0, from) + '\n' + toolsColumn('\n') + foot.slice(colEnd + '</div>'.length);
     }
     if (foot.indexOf('foot.learn') < 0 && foot.indexOf('>Learn<') < 0) {
       const legal = foot.indexOf('<div class="foot-legal">');
@@ -148,6 +146,15 @@ for (const pagePath of EN_ONLY) {
        other characters that a replacement string would interpret. */
     if (block) s = s.replace(canonRe, function (m) { return m + '\n' + block; });
   }
+
+  /* ---- stylesheet: same versioned URL as the generated pages ----
+     These three were hand-written and point at the bare path. The generator
+     emits ?v=<hash> so a changed stylesheet invalidates cache without a purge;
+     leaving these on the bare path means a returning visitor keeps the old CSS
+     and a newly added rule silently does nothing on exactly the pages that
+     carry the most prose. Idempotent: the u() call yields one canonical URL. */
+  s = s.replace(/<link rel="stylesheet" href="\/assets\/css\/main\.css(?:\?v=[a-f0-9]+)?">/g,
+    '<link rel="stylesheet" href="' + u('/assets/css/main.css') + '">');
 
   /* ---- the hero watermark attribute is no longer styled ---- */
   s = s.replace(/<div class="wrap" data-mark="[^"]*">/g, '<div class="wrap">');

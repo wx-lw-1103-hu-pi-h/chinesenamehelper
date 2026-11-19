@@ -1,6 +1,6 @@
-/* Generate sitemap.xml and robots.txt from the pages that actually exist.
+/* Generate the sitemap set and robots.txt from the pages that actually exist.
  *
- * Two things matter here and both are easy to get wrong:
+ * Three things matter here and all three are easy to get wrong:
  *
  *   1. List per locale. /pt/ and /ko/ are separate URLs with their own
  *      canonicals, so a sitemap that lists only the English set never even
@@ -9,6 +9,13 @@
  *   2. Carry the alternate set on every entry. The sitemap xhtml:link block is
  *      how a crawler learns that /pt/character/明/ and /character/明/ are the
  *      same page in two languages without having to fetch both first.
+ *
+ *   3. Split the output in two tiers. 480 character pages that differ only in
+ *      which glyph they describe are the exact shape a new domain gets
+ *      discounted for when it hands them all over at once, so they go into
+ *      their own file and the index does not list it yet. sitemap.xml itself
+ *      is a sitemapindex, not a urlset — a crawler that is handed a urlset
+ *      listing one page never learns the rest exist.
  *
  * Only pages on disk are listed — a sitemap full of 404s is worse than none —
  * and only for locales in SHIPPED, so /ja/ and /es/ stay out of the file even
@@ -34,14 +41,19 @@ const CHARS = [...new Set([].concat(g.HANZI, g.HANZI2).map(c => c.c))];
 
 /* Page inventory: the locale-relative path plus how it should be weighted.
    `enOnly` marks the pages that have not been translated yet, so they are
-   listed once rather than claimed for every language. */
+   listed once rather than claimed for every language.
+
+   `tier` decides which file an entry lands in. Everything written by hand is
+   core; only the character pages, which are one template rendered 480 times,
+   are library. A page added to this list is therefore core by default, which
+   is the safe direction to be wrong in. */
 const PAGES = [
-  { p: '/', priority: '1.0', changefreq: 'weekly' },
-  { p: '/characters/', priority: '0.8', changefreq: 'monthly' },
-  { p: '/gifts/', priority: '0.8', changefreq: 'monthly' },
-  { p: '/stroke-order/', priority: '0.9', changefreq: 'monthly', enOnly: true },
-  { p: '/hanzi-to-pinyin/', priority: '0.9', changefreq: 'monthly', enOnly: true },
-  { p: '/my-name-in-chinese/', priority: '0.8', changefreq: 'monthly', enOnly: true }
+  { p: '/', priority: '1.0', changefreq: 'weekly', tier: 'core' },
+  { p: '/characters/', priority: '0.8', changefreq: 'monthly', tier: 'core' },
+  { p: '/gifts/', priority: '0.8', changefreq: 'monthly', tier: 'core' },
+  { p: '/stroke-order/', priority: '0.9', changefreq: 'monthly', enOnly: true, tier: 'core' },
+  { p: '/hanzi-to-pinyin/', priority: '0.9', changefreq: 'monthly', enOnly: true, tier: 'core' },
+  { p: '/my-name-in-chinese/', priority: '0.8', changefreq: 'monthly', enOnly: true, tier: 'core' }
 ];
 
 /* One entry per carrier page, read from the same catalogue the generator uses.
@@ -49,7 +61,7 @@ const PAGES = [
    carrier is added, which is exactly the kind of silent gap the earlier
    single-language sitemap had. */
 require('./_gifts/catalog.cjs').forEach(function (item) {
-  PAGES.push({ p: '/gifts/' + item.slug + '/', priority: '0.7', changefreq: 'monthly' });
+  PAGES.push({ p: '/gifts/' + item.slug + '/', priority: '0.7', changefreq: 'monthly', tier: 'core' });
 });
 
 function exists(code, p) {
@@ -64,9 +76,9 @@ function exists(code, p) {
 const urls = [];
 const today = new Date().toISOString().slice(0, 10);
 
-function entry(code, p, priority, changefreq, alternates) {
+function entry(code, p, priority, changefreq, alternates, tier) {
   const loc = BASE + href(code, p);
-  urls.push({ loc, priority, changefreq, alternates });
+  urls.push({ loc, priority, changefreq, alternates, tier });
 }
 
 /* The alternate set for one page, as sitemap xhtml:link entries. Includes the
@@ -92,7 +104,7 @@ PAGES.forEach(function (item) {
   SHIPPED.forEach(function (code) {
     if (!exists(code, item.p)) return;
     if (item.enOnly && code !== 'en') return;
-    entry(code, item.p, item.priority, item.changefreq, langs > 1 ? alts : null);
+    entry(code, item.p, item.priority, item.changefreq, langs > 1 ? alts : null, item.tier);
   });
 });
 
@@ -102,29 +114,50 @@ CHARS.forEach(function (ch) {
   const langs = altLangCount(alts);
   SHIPPED.forEach(function (code) {
     if (!exists(code, p)) return;
-    entry(code, p, '0.6', 'yearly', langs > 1 ? alts : null);
+    entry(code, p, '0.6', 'yearly', langs > 1 ? alts : null, 'library');
   });
 });
 
-const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
-  '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
-  urls.map(function (u) {
-    let block = '  <url>\n' +
-      '    <loc>' + u.loc + '</loc>\n' +
-      '    <lastmod>' + today + '</lastmod>\n' +
-      '    <changefreq>' + u.changefreq + '</changefreq>\n' +
-      '    <priority>' + u.priority + '</priority>\n';
-    if (u.alternates) {
-      block += u.alternates.map(function (a) {
-        return '    <xhtml:link rel="alternate" hreflang="' + a.lang + '" href="' + a.loc + '"/>\n';
-      }).join('');
-    }
-    return block + '  </url>';
-  }).join('\n') +
-  '\n</urlset>\n';
+/* The two child files are complete and valid from day one; the index decides
+   which of them a crawler is told about. Promoting the library later is one
+   line here, not a regeneration of 480 pages. */
+function urlset(list) {
+  return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
+    '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+    list.map(function (u) {
+      let block = '  <url>\n' +
+        '    <loc>' + u.loc + '</loc>\n' +
+        '    <lastmod>' + today + '</lastmod>\n' +
+        '    <changefreq>' + u.changefreq + '</changefreq>\n' +
+        '    <priority>' + u.priority + '</priority>\n';
+      if (u.alternates) {
+        block += u.alternates.map(function (a) {
+          return '    <xhtml:link rel="alternate" hreflang="' + a.lang + '" href="' + a.loc + '"/>\n';
+        }).join('');
+      }
+      return block + '  </url>';
+    }).join('\n') +
+    '\n</urlset>\n';
+}
 
-fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), xml, 'utf8');
+const core = urls.filter(function (u) { return u.tier === 'core'; });
+const library = urls.filter(function (u) { return u.tier === 'library'; });
+
+/* Deliberately only sitemap-core.xml. sitemap-characters.xml is generated and
+   deployed but withheld until the core pages are indexed; adding it here is
+   the single switch that exposes the 480 character pages to Search Console. */
+const index = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  '  <sitemap>\n' +
+  '    <loc>' + BASE + '/sitemap-core.xml</loc>\n' +
+  '    <lastmod>' + today + '</lastmod>\n' +
+  '  </sitemap>\n' +
+  '</sitemapindex>\n';
+
+fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), index, 'utf8');
+fs.writeFileSync(path.join(ROOT, 'sitemap-core.xml'), urlset(core), 'utf8');
+fs.writeFileSync(path.join(ROOT, 'sitemap-characters.xml'), urlset(library), 'utf8');
 
 /* robots.txt — everything is public and static, so keep it permissive and
    just point at the sitemap. */
@@ -141,6 +174,7 @@ urls.forEach(function (u) {
   const code = m && m[1] ? m[1] : 'en';
   counts[code] = (counts[code] || 0) + 1;
 });
-console.log('sitemap: ' + urls.length + ' urls | ' +
+console.log('sitemap: ' + urls.length + ' urls | core=' + core.length +
+  ' library=' + library.length + ' | ' +
   Object.keys(counts).map(function (c) { return c + '=' + counts[c]; }).join(' ') +
   ' | robots.txt written');

@@ -26,9 +26,12 @@ module.exports = {
   'home.desc': '생일과 자기소개 몇 줄만 입력하면 몇 초 만에 진짜 중국 이름을 받습니다. 병음, 글자 뜻, 고전 출처, 서예 서명, 필순 애니메이션 포함. 무료, 회원가입 없음.',
   'home.ogtitle': '중국어 이름 생성기 — 내 중국 이름 받기',
   'home.ogdesc': '영어 이름을 음역하는 것이 아니라, 생년월일과 성격에서 출발해 진짜 중국 이름을 짓습니다. 병음, 뜻, 고전 출처, 서예, 필순 애니메이션 포함.',
-  'home.eyebrow': '중국어 이름 생성기',
-  'home.h1a': '내 이름은',
-  'home.h1b': '중국어로 어떻게 쓸까?',
+  /* The H1 now carries the full phrase, so the eyebrow says something else. */
+  'home.eyebrow': '음역이 아니라 뜻으로',
+  /* Same fix as ja/pt: 「중국어 이름」 was split across the two halves, so the
+     phrase the locale aims at never appeared in the H1 as one string. */
+  'home.h1a': '중국어 이름 생성기 —',
+  'home.h1b': '내 이름 짓기',
   'home.sub': '영어 이름의 발음을 한자로 옮기는 것이 아닙니다. 생일과 자신에 대한 솔직한 몇 마디를 알려주면, 병음과 글자 뜻, 고전 출처, 서예 서명이 딸린 중국 이름을 받습니다. 계속 쓸 수 있는 이름입니다.',
   'home.note': '무료 · 회원가입 없음 · {bold}모든 계산은 브라우저에서{/bold}',
 

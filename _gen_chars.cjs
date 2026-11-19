@@ -19,6 +19,9 @@ const i18n = require('./_i18n/index.cjs');
 const {
   ORIGIN, BRAND, SHIPPED, getLang, load: i18nLoad, fmt, href, link, hreflang, canonical, langSwitch
 } = i18n;
+/* Shared with the home and gift generators so every page of a locale marks the
+   English-only nav entries the same way; see _nav.cjs. */
+const { navFor, footTools } = require('./_nav.cjs');
 const OG = require('./_og.cjs');
 
 const ROOT = path.join(__dirname, 'site');
@@ -294,12 +297,7 @@ ${JSON.stringify(jsonld, null, 2)}
   <div class="wrap">
     <a class="brand" href="${href(code, '/')}">${MARK}<span class="brand-name">${BRAND}</span></a>
     <nav class="site-nav">
-      <a href="${href(code, '/')}">${esc(t['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(t['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(t['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(t['nav.stroke'])}</a>
-      <a href="${href(code, '/characters/')}">${esc(t['nav.characters'])}</a>
-      <a href="${href(code, '/gifts/')}">${esc(t['nav.gifts'])}</a>
+${navFor(code, t)}
     </nav>
     ${langSwitch(code, pathFor)}
   </div>
@@ -391,10 +389,7 @@ ${JSON.stringify(jsonld, null, 2)}
   <div class="wrap">
     <div class="foot-col">
       <h5>${esc(t['foot.tools'])}</h5>
-      <a href="${href(code, '/')}">${esc(t['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(t['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(t['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(t['nav.stroke'])}</a>
+${footTools(code, t)}
     </div>
     <div class="foot-legal">
       <div class="brand">${MARK}<span class="brand-name">${BRAND}</span></div>
@@ -674,12 +669,7 @@ ${ICON}
   <div class="wrap">
     <a class="brand" href="${href(code, '/')}">${MARK}<span class="brand-name">${BRAND}</span></a>
     <nav class="site-nav">
-      <a href="${href(code, '/')}">${esc(t['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(t['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(t['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(t['nav.stroke'])}</a>
-      <a href="${href(code, '/characters/')}">${esc(t['nav.characters'])}</a>
-      <a href="${href(code, '/gifts/')}">${esc(t['nav.gifts'])}</a>
+${navFor(code, t)}
     </nav>
     ${langSwitch(code, pathFor)}
   </div>
@@ -717,10 +707,7 @@ ${ICON}
   <div class="wrap">
     <div class="foot-col">
       <h5>${esc(t['foot.tools'])}</h5>
-      <a href="${href(code, '/')}">${esc(t['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(t['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(t['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(t['nav.stroke'])}</a>
+${footTools(code, t)}
     </div>
     <div class="foot-legal">
       <div class="brand">${MARK}<span class="brand-name">${BRAND}</span></div>

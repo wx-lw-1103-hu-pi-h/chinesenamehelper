@@ -53,9 +53,12 @@ is shipped. Upload `site/` to any static host and it works.
 - **Quality filters.** `ATTESTED` (680+ pairings that are real names) adds
   weight; `BLOCKED` (通信, 大学, 风雨 …) subtracts heavily. This is what stops
   the output reading like two random words.
-- **Exploration.** `avoid` carries the names already shown, and the candidate
-  pool widens as it fills, so "another set" keeps producing new names instead
-  of re-dealing the top pair. Ten consecutive draws give 50 distinct names.
+- **Exploration.** `avoid` carries every name already shown. Candidates are
+  drawn from the whole library, and a character costs 6 points per earlier
+  appearance (capped at four appearances), so unseen glyphs win by default while
+  name quality still decides between two unseen pairs. Forty consecutive draws
+  give 200 distinct names with no repeats, and a name from the first screen does
+  not come back later in the visit.
 - **One number per name.** `fitOf()` decomposes a name into element fit, meaning
   match, sound and gender, then isotonic regression forces the display order to
   agree with the ranking — the ring never says something the rank contradicts.
@@ -95,9 +98,18 @@ After editing `characters.js` or `characters2.js`:
 
 ```bash
 node _gen_chars.cjs      # 120 character pages + the library index
+node _gen_gifts.cjs      # carrier pages
+node _gen_home.cjs       # the four home pages
 node _unify_nav.cjs      # identical navigation on every page
 node _gen_sitemap.cjs    # sitemap.xml + robots.txt from pages that exist
 ```
+
+The header nav and the footer's tools column are built by `_nav.cjs` for every
+generator. It is the only place that decides whether a link needs
+`hreflang="en"` and a visible `EN` marker — those appear on the translated
+locales for the three English-only prose pages, and nowhere else. Six copies of
+the same six anchors is how the marker ended up on the homes and missing from
+396 section pages.
 
 ## Verifying locally
 

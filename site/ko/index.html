@@ -29,7 +29,7 @@
 <meta name="twitter:image" content="https://chinesenamehelper.com/assets/og/home-ko.png">
 
 <link rel="icon" href="/favicon.svg?v=7da5aa03" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/main.css?v=13a519b6">
+<link rel="stylesheet" href="/assets/css/main.css?v=9337cecd">
 
 <script type="application/ld+json">
 {
@@ -38,7 +38,7 @@
     {
       "@type": "WebApplication",
       "@id": "https://chinesenamehelper.com/ko/#app",
-      "name": "Chinese Name Helper — 중국어 이름 생성기",
+      "name": "Chinese Name Helper — 음역이 아니라 뜻으로",
       "url": "https://chinesenamehelper.com/ko/",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -126,7 +126,7 @@
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "중국어 이름 생성기",
+          "name": "음역이 아니라 뜻으로",
           "item": "https://chinesenamehelper.com/ko/"
         }
       ]
@@ -142,9 +142,9 @@
     <a class="brand" href="/ko/"><img class="brand-mark" src="/assets/img/mark.svg?v=4aca024d" width="34" height="34" alt="" aria-hidden="true"><span class="brand-name">Chinese Name Helper</span></a>
     <nav class="site-nav">
       <a href="/ko/">이름 생성</a>
-      <a href="/my-name-in-chinese/">내 중국 이름</a>
-      <a href="/hanzi-to-pinyin/">한자 → 병음</a>
-      <a href="/stroke-order/">필순</a>
+      <a href="/my-name-in-chinese/" hreflang="en">내 중국 이름<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/hanzi-to-pinyin/" hreflang="en">한자 → 병음<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/stroke-order/" hreflang="en">필순<span class="nav-en" aria-hidden="true">EN</span></a>
       <a href="/ko/characters/">한자 사전</a>
       <a href="/ko/gifts/">물건</a>
     </nav>
@@ -164,8 +164,8 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-lede">
-        <div class="eyebrow">중국어 이름 생성기</div>
-        <h1 class="hero-title">내 이름은 <span class="accent">중국어로 어떻게 쓸까?</span></h1>
+        <div class="eyebrow">음역이 아니라 뜻으로</div>
+        <h1 class="hero-title">중국어 이름 생성기 — <span class="accent">내 이름 짓기</span></h1>
         <p class="hero-sub">영어 이름의 발음을 한자로 옮기는 것이 아닙니다. 생일과 자신에 대한 솔직한 몇 마디를 알려주면, 병음과 글자 뜻, 고전 출처, 서예 서명이 딸린 중국 이름을 받습니다. 계속 쓸 수 있는 이름입니다.</p>
         <p class="hero-note">무료 · 회원가입 없음 · <b>모든 계산은 브라우저에서</b></p>
       </div>
@@ -256,24 +256,24 @@
     <div class="wrap">
       <h2>이것이 음역 도구가 아닌 이유</h2>
       <p class="lede">대부분의 중국어 이름 생성기는 영어 이름의 발음을 한자로 옮깁니다. 읽을 수는 있지만 거의 절대 이름이 되지 않습니다. 이 도구는 반대로 갑니다.</p>
-      <div class="feat-grid">
+      <div class="feat-grid feat-grid-home">
         <div class="feat" data-n="一">
-          <div class="ico">历</div>
+          <div class="ico" data-n="一">历</div>
           <h3>생년월일이 틀을 잡습니다</h3>
           <p>양력을 음력으로 바꿔 띠와 사주의 여덟 글자를 얻습니다. 오행이 각각 몇 개인지 세고, 이름은 가장 부족한 쪽으로 기웁니다.</p>
         </div>
         <div class="feat" data-n="二">
-          <div class="ico">意</div>
+          <div class="ico" data-n="二">意</div>
           <h3>당신의 말이 뜻을 고릅니다</h3>
           <p>차분한지, 추진력이 있는지, 호기심이 많은지, 온화한지를 적으면 엔진이 그 자질을 담은 글자를 고릅니다 — 영어 이름과 발음이 비슷한 글자가 아니라.</p>
         </div>
         <div class="feat" data-n="三">
-          <div class="ico">典</div>
+          <div class="ico" data-n="三">典</div>
           <h3>모든 글자에 출처가 있습니다</h3>
           <p>모든 선택에는 실제 고전 문장이 붙습니다 — 《시경》, 《논어》, 《초사》 — 원문과 그 뜻, 그리고 서양 독자에게도 바로 와닿는 비유까지.</p>
         </div>
         <div class="feat" data-n="四">
-          <div class="ico">书</div>
+          <div class="ico" data-n="四">书</div>
           <h3>이름만이 아니라 서명까지</h3>
           <p>모든 결과에 네 가지 필체와 도장이 찍힌 서예가 생성되고, 획순 애니메이션까지 붙습니다. 받은 이름을 실제로 쓸 수 있게 됩니다.</p>
         </div>
@@ -324,11 +324,9 @@
     <div class="foot-col">
       <h5>도구</h5>
       <a href="/ko/">이름 생성</a>
-      <a href="/my-name-in-chinese/">내 중국 이름</a>
-      <a href="/hanzi-to-pinyin/">한자 → 병음</a>
-      <a href="/stroke-order/">필순</a>
-      <a href="/ko/characters/">한자 사전</a>
-      <a href="/ko/gifts/">물건</a>
+      <a href="/my-name-in-chinese/" hreflang="en">내 중국 이름<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/hanzi-to-pinyin/" hreflang="en">한자 → 병음<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/stroke-order/" hreflang="en">필순<span class="nav-en" aria-hidden="true">EN</span></a>
     </div>
     <div class="foot-col">
       <h5>알아보기</h5>
@@ -348,13 +346,13 @@
 <script src="/assets/lib/lunar.js"></script>
 <script src="/assets/data/characters.js?v=0656da35"></script>
 <script src="/assets/data/characters2.js?v=1845301a"></script>
-<script src="/assets/js/engine.js?v=78a43087"></script>
+<script src="/assets/js/engine.js?v=ae9efb18"></script>
 <script src="/assets/lib/hanzi-writer.min.js" defer></script>
 <script src="/assets/js/signature.js?v=0db5c90f"></script>
 <!-- Runtime strings for this locale: the cards, the chart strip and every toast
      are built in app.js after a click, so they cannot be baked into the HTML. -->
 <script src="/assets/i18n/ko.js"></script>
-<script src="/assets/js/app.js?v=78b5c654"></script>
+<script src="/assets/js/app.js?v=05832160"></script>
 <!-- A hint only: it reads the browser language and offers a link, never
      redirects. See lang-hint.js for why a redirect would cost the translations
      their indexing. -->

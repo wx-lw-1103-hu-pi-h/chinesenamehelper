@@ -77,21 +77,42 @@ for (const c of CASES) {
 console.log('fit range:', Math.min(...fits), '-', Math.max(...fits),
   '| all 0-100 ints:', fits.every(f => Number.isInteger(f) && f >= 0 && f <= 100));
 
-// "another set" must actually move on — run deep, like a curious visitor
+// "another set" must actually move on — run deep, like a curious visitor.
+// The old version stopped at ten draws, which is exactly where the previous
+// implementation wiped its exclusion list, so the bug it was supposed to catch
+// sat one draw past the end of the test.
 const seen = [], gens = [];
 let avoid = [];
-for (let s = 1; s <= 10; s++) {
+for (let s = 1; s <= 40; s++) {
   const r = E.generate({ surname: '王', gender: 'male', year: 1994, month: 1, day: 27, desc: 'calm', seed: s, avoid, count: 5 });
   const gs = r.names.map(n => n.given);
   gens.push(gs.join('/'));
-  gs.forEach(x => avoid.push(x));
+  gs.forEach(x => { if (avoid.indexOf(x) < 0) avoid.push(x); });
   r.names.forEach(n => seen.push(n.given));
 }
 const repeats = seen.length - new Set(seen).size;
-console.log('10 draws with avoid -> distinct names:', new Set(seen).size, 'of', seen.length, '| repeats:', repeats);
+console.log('40 draws with avoid -> distinct names:', new Set(seen).size, 'of', seen.length, '| repeats:', repeats);
 console.log('draw 1: ', gens[0]);
-console.log('draw 5: ', gens[4]);
-console.log('draw 10:', gens[9]);
+console.log('draw 20:', gens[19]);
+console.log('draw 40:', gens[39]);
+
+// A name from the first screen must not come back later in the visit: that is
+// the complaint "it is always the same few names" in its most literal form.
+const firstBatch = gens[0].split('/');
+const backLater = gens.slice(1).reduce((acc, g) =>
+  acc + g.split('/').filter(x => firstBatch.indexOf(x) >= 0).length, 0);
+console.log('names from draw 1 reappearing in draws 2-40:', backLater);
+
+// Glyph spread: fifty name slots should touch close to fifty different
+// characters, not recycle the same fifteen.
+const earlyChars = new Set();
+gens.slice(0, 5).forEach(g => Array.from(g).forEach(c => { if (c !== '/') earlyChars.add(c); }));
+console.log('distinct characters in the first 5 draws:', earlyChars.size, 'of 50 slots');
+
+// character coverage over the whole run
+const allChars = new Set();
+seen.forEach(n => Array.from(n).forEach(c => allChars.add(c)));
+console.log('characters reached in 40 draws:', allChars.size, 'of', E.library().length);
 
 // exhaustion guard: avoid everything plausible, expect a fallback not a blank
 const everything = [];

@@ -23,13 +23,21 @@ module.exports = {
   'foot.lang': '言語',
 
   /* ---------- ホーム ---------- */
-  'home.title': '中国語の名前ジェネレーター — 無料で中国名をつくる',
+  /* 「変換」 only appeared in the nav label, never on the page the search
+     lands on, so the title carries it. The H1 keeps the naming angle — one
+     page can only own one demand, and naming is this page's job. */
+  'home.title': '中国語の名前 変換ジェネレーター — 無料で中国名をつくる',
   'home.desc': '生年月日と自己紹介を数行入力するだけで、本物の中国名が数秒で手に入ります。ピンイン、字義、古典の出典、書道の署名、筆順アニメーション付き。無料・登録不要。',
   'home.ogtitle': '中国語の名前ジェネレーター — 中国名をつくる',
   'home.ogdesc': '英語名を音訳するのではなく、生年月日と性格から本当の中国名を選びます。ピンイン、意味、出典、書道、筆順アニメーション付き。',
-  'home.eyebrow': '中国語の名前ジェネレーター',
-  'home.h1a': 'あなたの名前を',
-  'home.h1b': '中国語では？',
+  /* Same reason as the English eyebrow: the title now carries
+     「中国語の名前 変換」, so repeating it above the H1 wastes the line. */
+  'home.eyebrow': '音訳ではなく、字義から',
+  /* The H1 has to contain 「中国語の名前」 as one unbroken string: it is the
+     phrase this locale is aiming at, and 「あなたの名前を / 中国語では？」 split
+     it across the two halves, so the page never stated it in full. */
+  'home.h1a': '中国語の名前を',
+  'home.h1b': 'つくる',
   'home.sub': '英語名の発音を漢字に置き換えるのではありません。生年月日と、自分についての正直な数行を教えてください。ピンイン、字義、古典の出典、書道の署名がついた中国名をお渡しします。ずっと使い続けられる名前です。',
   'home.note': '無料 · 登録不要 · {bold}すべてブラウザ内で完結{/bold}',
 

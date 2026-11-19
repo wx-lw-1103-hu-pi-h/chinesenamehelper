@@ -27,9 +27,13 @@ module.exports = {
   'home.desc': 'Consiga um nome chinês de verdade em segundos. Informe sua data de nascimento e algumas palavras sobre você e receba um nome com pinyin, significados, fontes clássicas, uma assinatura caligráfica e a ordem dos traços animada. Grátis, sem cadastro.',
   'home.ogtitle': 'Gerador de nomes chineses — Seu nome em chinês',
   'home.ogdesc': 'Um nome chinês construído a partir da sua data de nascimento, não traduzido do seu nome em inglês. Pinyin, significados, fontes clássicas, caligrafia e animação dos traços.',
-  'home.eyebrow': 'Gerador de nomes chineses',
-  'home.h1a': 'Como se escreve seu nome',
-  'home.h1b': 'em chinês?',
+  /* The H1 now carries the full phrase, so the eyebrow says something else. */
+  'home.eyebrow': 'Caracteres, não transliteração',
+  /* The H1 has to carry 「nome em chinês」 unbroken: it is the phrase this
+     locale aims at, and 「Como se escreve seu nome / em chinês?」 split the
+     preposition away from the noun across the accent-styled half. */
+  'home.h1a': 'Gerador de nomes chineses —',
+  'home.h1b': 'seu nome em chinês',
   'home.sub': 'Não é uma cópia fonética do seu nome em inglês. Dê sua data de nascimento e algumas palavras honestas sobre você, e receba um nome chinês com pinyin, significados, fontes clássicas e uma assinatura caligráfica para guardar.',
   'home.note': 'Grátis · sem cadastro · {bold}tudo acontece no seu navegador{/bold}',
 

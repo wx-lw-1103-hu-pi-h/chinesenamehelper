@@ -27,12 +27,15 @@ module.exports = {
 
   /* ---------- home: hero ---------- */
   'home.title': 'Chinese Name Generator — Get Your Name in Chinese (Free)',
-  'home.desc': 'Get a real Chinese name in seconds. Enter your birthday and a few words about yourself, and receive a name with pinyin, character meanings, classical sources, a calligraphy signature and an animated stroke order. Free, no sign-up.',
+  'home.desc': 'A Chinese name generator that reads your birthday and picks characters for meaning, not sound. Free, no sign-up, with pinyin and stroke order.',
   'home.ogtitle': 'Chinese Name Generator — Get Your Name in Chinese',
   'home.ogdesc': 'A Chinese name built from your birth date, not translated from your English name. Pinyin, meanings, classical sources, calligraphy and stroke animation.',
-  'home.eyebrow': 'Chinese name generator',
-  'home.h1a': "What's your name",
-  'home.h1b': 'in Chinese?',
+  /* The eyebrow used to repeat the H1's keyword. With the H1 now carrying
+     "Chinese name generator" in full, an eyebrow saying the same thing is a
+     wasted line, so it names the mechanism instead. */
+  'home.eyebrow': 'Characters, not transliteration',
+  'home.h1a': 'Chinese name generator —',
+  'home.h1b': 'find yours',
   'home.sub': 'Not a phonetic copy of your English name. Give your birthday and a few honest words about yourself, and get a Chinese name with pinyin, character meanings, classical sources and a calligraphy signature you can keep.',
   'home.note': 'Free · no sign-up · {bold}everything runs in your browser{/bold}',
 

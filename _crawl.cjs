@@ -156,21 +156,48 @@ function actualAlternates(body) {
   console.log('structural/link problems:', uniqProblems.length);
   uniqProblems.slice(0, 25).forEach(p => console.log('  -', p));
 
-  /* --- the sitemap has to describe exactly the pages that were crawled --- */
-  const sm = await get('/sitemap.xml');
-  const locs = [...sm.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].replace(ORIGIN, ''));
+  /* --- the sitemap set has to describe exactly the pages that were crawled ---
+
+     sitemap.xml is an index, so the URLs are one level down. Reading only the
+     index would report zero locs and look like a pass; reading only the children
+     would hide a child that was never listed. Both levels are read, and the
+     library file is allowed to exist without being listed yet — that is the
+     deliberate hold, not a bug, so it is reported rather than counted wrong. */
+  const smIndex = await get('/sitemap.xml');
+  const childLocs = [...smIndex.body.matchAll(/<sitemap>[\s\S]*?<loc>([^<]+)<\/loc>[\s\S]*?<\/sitemap>/g)]
+    .map(m => m[1].replace(ORIGIN, ''));
+  let locs = [];
+  for (const child of childLocs) {
+    const res = await get(child);
+    if (res.status !== 200) { console.log('  FAIL sitemap child ' + child + ' -> ' + res.status); continue; }
+    locs = locs.concat([...res.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].replace(ORIGIN, '')));
+  }
   const locSet = new Set(locs);
-  const notInSitemap = [...KNOWN].filter(u => !locSet.has(u));
+  /* Pages in a generated-but-unlisted child are excluded from "missing": they
+     are intentionally withheld from the index until the core set is indexed. */
+  const held = await get('/sitemap-characters.xml');
+  const heldSet = new Set(held.status === 200
+    ? [...held.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].replace(ORIGIN, ''))
+    : []);
+  const notInSitemap = [...KNOWN].filter(u => !locSet.has(u) && !heldSet.has(u));
   const inSitemapOnly = locs.filter(u => !KNOWN.has(u));
   const dupeLocs = locs.filter((u, i) => locs.indexOf(u) !== i);
   const badSlash = locs.filter(u => u !== '/' && !u.endsWith('/'));
-  console.log('\nsitemap:', sm.status, '| locs:', locs.length,
+  console.log('\nsitemap index:', smIndex.status, '| children:', childLocs.length,
+    '| locs:', locs.length,
+    '| held back:', heldSet.size,
     '| missing from sitemap:', notInSitemap.length,
     '| extra in sitemap:', inSitemapOnly.length,
     '| duplicates:', dupeLocs.length,
     '| no trailing slash:', badSlash.length);
   notInSitemap.slice(0, 8).forEach(u => console.log('  - not listed:', u));
   inSitemapOnly.slice(0, 8).forEach(u => console.log('  - stale entry:', u));
+
+  /* The held-back file must be a strict subset of the real routes. A loc in it
+     that no page answers is a 404 waiting to be published with one edit. */
+  const heldUnknown = [...heldSet].filter(u => !KNOWN.has(u));
+  console.log('  held-back file:', held.status, '| not a real route:', heldUnknown.length);
+  heldUnknown.slice(0, 8).forEach(u => console.log('  - not a route:', u));
 
   /* --- spot-check one page per locale in detail --- */
   for (const code of SHIPPED) {

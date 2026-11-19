@@ -18,6 +18,9 @@ const { u } = require('./_assets.cjs');
 const { execFileSync } = require('child_process');
 /* Full path needed: a directory is not resolved to index.cjs. */
 const i18n = require('./_i18n/index.cjs');
+/* Shared with the home and character generators so every page of a locale
+   marks the English-only nav entries the same way; see _nav.cjs. */
+const { navFor, footTools } = require('./_nav.cjs');
 const {
   ORIGIN, BRAND, SHIPPED, getLang, load: i18nLoad, fmt, href, link, hreflang, canonical, langSwitch
 } = i18n;
@@ -151,12 +154,7 @@ function header(ui, gt, code, pathFor) {
   <div class="wrap">
     <a class="brand" href="${href(code, '/')}">${MARKET}<span class="brand-name">${esc(BRAND)}</span></a>
     <nav class="site-nav">
-      <a href="${href(code, '/')}">${esc(ui['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(ui['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(ui['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(ui['nav.stroke'])}</a>
-      <a href="${href(code, '/characters/')}">${esc(ui['nav.characters'])}</a>
-      <a href="${href(code, '/gifts/')}" aria-current="true">${esc(gt['nav.gifts'])}</a>
+${navFor(code, ui, '/gifts/', gt['nav.gifts'])}
     </nav>
     ${langSwitch(code, pathFor)}
   </div>
@@ -168,10 +166,7 @@ function footer(ui, gt, code) {
   <div class="wrap">
     <div class="foot-col">
       <h5>${esc(ui['foot.tools'])}</h5>
-      <a href="${href(code, '/')}">${esc(ui['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(ui['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(ui['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(ui['nav.stroke'])}</a>
+${footTools(code, ui)}
     </div>
     <div class="foot-col">
       <h5>${esc(ui['foot.learn'])}</h5>

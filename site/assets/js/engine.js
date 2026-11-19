@@ -402,16 +402,18 @@
       return { ch: ch, s: scoreChar(ch, ctx) };
     }).sort(function (x, y) { return y.s - x.s; });
 
-    /* Every name consumes two characters and no character may repeat inside a
-       batch, so a fixed 34-character pool dries up after three batches. Widen
-       it by however many characters previous batches already used — the
-       visitor asked to see something new, so we need new letters to offer. */
+    /* A name consumes two characters and no character repeats inside a batch.
+       Drawing from a fixed 34-character top pool dried up after three batches:
+       each draw used ten glyphs, so the same letters kept coming back. Draw
+       from the whole library instead, and let the freshness score below steer
+       the visitor towards what they have not seen yet. */
     var avoidList = (opts.avoid || []).filter(Boolean);
-    var seenChar = {};
-    avoidList.forEach(function (g) { Array.from(g).forEach(function (c) { seenChar[c] = 1; }); });
+    var freq = {};
+    avoidList.forEach(function (g) {
+      Array.from(g).forEach(function (c) { freq[c] = (freq[c] || 0) + 1; });
+    });
 
-    var poolSize = Math.min(scored.length, 34 + avoidList.length * 2);
-    var pool = scored.slice(0, poolSize).map(function (x) { return x.ch; });
+    var pool = scored.map(function (x) { return x.ch; });
     var charScore = {};
     scored.forEach(function (x) { charScore[x.ch.c] = x.s; });
 
@@ -425,9 +427,12 @@
         /* attested pairings get a real boost — they are what people expect */
         var bonus = ATTESTED[a.c + b.c] ? 26 : 0;
         /* Characters the visitor has not met yet outrank ones already shown,
-           otherwise widening the pool only re-deals the same top names. */
-        var fresh = (!seenChar[a.c] && !seenChar[b.c]) ? 40 :
-                    (!seenChar[a.c] || !seenChar[b.c]) ? 14 : 0;
+           otherwise widening the pool only re-deals the same top names. The
+           penalty deepens with every repeat but is capped, so "never repeat"
+           stays a tie-breaker instead of overpowering name quality deep into
+           a long session. */
+        var reuse = (freq[a.c] || 0) + (freq[b.c] || 0);
+        var fresh = reuse === 0 ? 40 : -Math.min(reuse, 4) * 6;
         pr.total = charScore[a.c] + charScore[b.c] * 0.92 - pen + bonus + fresh - ctx.rnd() * 0.5;
         pairs.push(pr);
       }

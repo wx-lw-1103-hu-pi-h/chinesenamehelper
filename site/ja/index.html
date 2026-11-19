@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>中国語の名前ジェネレーター — 無料で中国名をつくる</title>
+<title>中国語の名前 変換ジェネレーター — 無料で中国名をつくる</title>
 <meta name="description" content="生年月日と自己紹介を数行入力するだけで、本物の中国名が数秒で手に入ります。ピンイン、字義、古典の出典、書道の署名、筆順アニメーション付き。無料・登録不要。">
 <link rel="canonical" href="https://chinesenamehelper.com/ja/">
 <link rel="alternate" hreflang="en" href="https://chinesenamehelper.com/">
@@ -29,7 +29,7 @@
 <meta name="twitter:image" content="https://chinesenamehelper.com/assets/og/home-ja.png">
 
 <link rel="icon" href="/favicon.svg?v=7da5aa03" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/main.css?v=13a519b6">
+<link rel="stylesheet" href="/assets/css/main.css?v=9337cecd">
 
 <script type="application/ld+json">
 {
@@ -38,7 +38,7 @@
     {
       "@type": "WebApplication",
       "@id": "https://chinesenamehelper.com/ja/#app",
-      "name": "Chinese Name Helper — 中国語の名前ジェネレーター",
+      "name": "Chinese Name Helper — 音訳ではなく、字義から",
       "url": "https://chinesenamehelper.com/ja/",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
@@ -126,7 +126,7 @@
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "中国語の名前ジェネレーター",
+          "name": "音訳ではなく、字義から",
           "item": "https://chinesenamehelper.com/ja/"
         }
       ]
@@ -142,9 +142,9 @@
     <a class="brand" href="/ja/"><img class="brand-mark" src="/assets/img/mark.svg?v=4aca024d" width="34" height="34" alt="" aria-hidden="true"><span class="brand-name">Chinese Name Helper</span></a>
     <nav class="site-nav">
       <a href="/ja/">名前生成</a>
-      <a href="/my-name-in-chinese/">中国語の名前</a>
-      <a href="/hanzi-to-pinyin/">漢字→ピンイン</a>
-      <a href="/stroke-order/">筆順</a>
+      <a href="/my-name-in-chinese/" hreflang="en">中国語の名前<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/hanzi-to-pinyin/" hreflang="en">漢字→ピンイン<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/stroke-order/" hreflang="en">筆順<span class="nav-en" aria-hidden="true">EN</span></a>
       <a href="/ja/characters/">漢字一覧</a>
       <a href="/ja/gifts/">工芸</a>
     </nav>
@@ -164,8 +164,8 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-lede">
-        <div class="eyebrow">中国語の名前ジェネレーター</div>
-        <h1 class="hero-title">あなたの名前を <span class="accent">中国語では？</span></h1>
+        <div class="eyebrow">音訳ではなく、字義から</div>
+        <h1 class="hero-title">中国語の名前を <span class="accent">つくる</span></h1>
         <p class="hero-sub">英語名の発音を漢字に置き換えるのではありません。生年月日と、自分についての正直な数行を教えてください。ピンイン、字義、古典の出典、書道の署名がついた中国名をお渡しします。ずっと使い続けられる名前です。</p>
         <p class="hero-note">無料 · 登録不要 · <b>すべてブラウザ内で完結</b></p>
       </div>
@@ -256,24 +256,24 @@
     <div class="wrap">
       <h2>これが音訳ツールではない理由</h2>
       <p class="lede">中国名のジェネレーターの多くは、英語名の発音を漢字に置き換えます。読めはしますが、ほとんど名前にはなりません。このツールは逆の方向から作ります。</p>
-      <div class="feat-grid">
+      <div class="feat-grid feat-grid-home">
         <div class="feat" data-n="一">
-          <div class="ico">历</div>
+          <div class="ico" data-n="一">历</div>
           <h3>生年月日が枠を決める</h3>
           <p>新暦を旧暦に換算し、干支と四柱推命の八つの字を得ます。五行それぞれの数を数え、最も不足しているものへ寄せます。</p>
         </div>
         <div class="feat" data-n="二">
-          <div class="ico">意</div>
+          <div class="ico" data-n="二">意</div>
           <h3>あなたの言葉が意味を決める</h3>
           <p>穏やか、意欲的、好奇心旺盛、温厚——どれを書いたかで、エンジンはその資質を担う字を選びます。英語名と音が似ている字ではなく。</p>
         </div>
         <div class="feat" data-n="三">
-          <div class="ico">典</div>
+          <div class="ico" data-n="三">典</div>
           <h3>すべての字に出典がある</h3>
           <p>どの選択にも実際の古典の一節がつきます。『詩経』『論語』『楚辞』——原文とその意味、そして西洋の読者にも伝わるたとえを添えて。</p>
         </div>
         <div class="feat" data-n="四">
-          <div class="ico">书</div>
+          <div class="ico" data-n="四">书</div>
           <h3>名前だけでなく署名まで</h3>
           <p>どの結果にも四つの書体と印を押した書道が生成され、筆順アニメーションもつきます。与えられた名前を本当に書けるようになります。</p>
         </div>
@@ -324,11 +324,9 @@
     <div class="foot-col">
       <h5>ツール</h5>
       <a href="/ja/">名前生成</a>
-      <a href="/my-name-in-chinese/">中国語の名前</a>
-      <a href="/hanzi-to-pinyin/">漢字→ピンイン</a>
-      <a href="/stroke-order/">筆順</a>
-      <a href="/ja/characters/">漢字一覧</a>
-      <a href="/ja/gifts/">工芸</a>
+      <a href="/my-name-in-chinese/" hreflang="en">中国語の名前<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/hanzi-to-pinyin/" hreflang="en">漢字→ピンイン<span class="nav-en" aria-hidden="true">EN</span></a>
+      <a href="/stroke-order/" hreflang="en">筆順<span class="nav-en" aria-hidden="true">EN</span></a>
     </div>
     <div class="foot-col">
       <h5>知る</h5>
@@ -348,13 +346,13 @@
 <script src="/assets/lib/lunar.js"></script>
 <script src="/assets/data/characters.js?v=0656da35"></script>
 <script src="/assets/data/characters2.js?v=1845301a"></script>
-<script src="/assets/js/engine.js?v=78a43087"></script>
+<script src="/assets/js/engine.js?v=ae9efb18"></script>
 <script src="/assets/lib/hanzi-writer.min.js" defer></script>
 <script src="/assets/js/signature.js?v=0db5c90f"></script>
 <!-- Runtime strings for this locale: the cards, the chart strip and every toast
      are built in app.js after a click, so they cannot be baked into the HTML. -->
 <script src="/assets/i18n/ja.js"></script>
-<script src="/assets/js/app.js?v=78b5c654"></script>
+<script src="/assets/js/app.js?v=05832160"></script>
 <!-- A hint only: it reads the browser language and offers a link, never
      redirects. See lang-hint.js for why a redirect would cost the translations
      their indexing. -->

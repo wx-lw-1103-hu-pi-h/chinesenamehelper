@@ -42,18 +42,18 @@
 :root {
   /* ink 鈥?榛? A cool pine black rather than a warm one: warm black on a cool
      ground looks like dirt, so the text carries the page's temperature too. */
-  --ink:        #17241f;
-  --ink-soft:   #3c4d46;
-  --ink-mute:   #52645b;
+  --ink:        #1f1a15;
+  --ink-soft:   #453a31;
+  --ink-mute:   #6b5d51;
 
   /* paper 鈥?celadon */
-  --paper:      #e0eae2;
-  --paper-2:    #d6e2d8;
-  --paper-3:    #c9d8cd;
-  --paper-glow: #f6faf7;
-  --card:       #fcfffd;
-  --line:       #bccfc2;
-  --line-2:     #a3bbaa;
+  --paper:      #f6f1e6;
+  --paper-2:    #efe8da;
+  --paper-3:    #e6dcc9;
+  --paper-glow: #fffdf7;
+  --card:       #fffdf9;
+  --line:       #ded2bf;
+  --line-2:     #c9b9a2;
 
   /* accents */
   --cinnabar:   #b23a2a;
@@ -68,9 +68,9 @@
      deliberate softening of the corner, not a rounded rectangle. */
   --radius:     5px;
   --radius-sm:  3px;
-  --shadow-sm:  0 1px 1px rgba(23,36,31,.04);
-  --shadow-md:  0 1px 2px rgba(23,36,31,.05), 0 10px 22px -18px rgba(23,36,31,.28);
-  --shadow-lg:  0 2px 6px rgba(23,36,31,.06), 0 20px 40px -28px rgba(23,36,31,.32);
+  --shadow-sm:  0 1px 1px rgba(31,26,21,.04);
+  --shadow-md:  0 1px 2px rgba(31,26,21,.05), 0 10px 22px -18px rgba(31,26,21,.28);
+  --shadow-lg:  0 2px 6px rgba(31,26,21,.06), 0 20px 40px -28px rgba(31,26,21,.32);
 
   --serif: "Noto Serif SC", "Songti SC", "Source Han Serif SC", Georgia, "Times New Roman", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "PingFang SC",
@@ -169,6 +169,19 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .site-nav a { color: var(--ink-soft); transition: color .16s; }
 .site-nav a:hover { color: var(--cinnabar); text-decoration: none; }
 .site-nav a[aria-current="true"] { color: var(--cinnabar); font-weight: 600; }
+
+/* Marks a nav entry whose target is still English on a translated page.
+   The reader is told before the click rather than after, which is the whole
+   point; the marker must not look like a button or a flag, so it is plain
+   small text in the muted ink, at normal weight. */
+.site-nav .nav-en {
+  margin-left: 4px;
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+.site-nav a:hover .nav-en { color: var(--cinnabar); }
 
 /* language switcher (built by _i18n) */
 .lang-menu { position: relative; font-size: 13px; flex: none; }
@@ -448,7 +461,7 @@ input[type=text], input[type=number], select, textarea {
   transition: border-color .16s, box-shadow .16s, background .16s;
   -webkit-appearance: none; appearance: none;
 }
-input::placeholder, textarea::placeholder { color: #93a49a; }
+input::placeholder, textarea::placeholder { color: #b7a894; }
 input[type=text]:focus, input[type=number]:focus, select:focus, textarea:focus {
   outline: none; border-color: rgba(178,58,42,.55); background: var(--card);
   box-shadow: 0 0 0 3px rgba(178,58,42,.09);
@@ -529,15 +542,15 @@ select {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--card); border: 1px solid var(--line); border-radius: 3px;
   padding: 3px 11px; font-size: 12.5px; color: var(--ink-soft); white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(23,36,31,.05);
+  box-shadow: 0 1px 2px rgba(31,26,21,.05);
 }
 .chip b { font-weight: 600; color: var(--ink); }
 /* Tinted chips are flat fills, not two-stop gradients. A white-to-warm gradient
    on a 26px pill is invisible except as a faint smudge, and it was one of four
    surfaces on the page doing the same thing. */
-.chip.hot { border-color: rgba(178,58,42,.32); background: #f7e6e2; color: var(--cinnabar); }
+.chip.hot { border-color: rgba(178,58,42,.32); background: #f7efe4; color: var(--cinnabar); }
 .chip.hot b { color: var(--cinnabar); }
-.chip.jade { border-color: rgba(47,109,89,.3); background: #e6f1eb; color: var(--jade); }
+.chip.jade { border-color: rgba(47,109,89,.3); background: #f1ebde; color: var(--jade); }
 .chip.jade b { color: var(--jade); }
 
 /* --- name card --- */
@@ -727,7 +740,7 @@ select {
   border: 1px solid var(--line); background: var(--card); border-radius: 3px;
   padding: 6px 16px; font-size: 13px; cursor: pointer; color: var(--ink-soft);
   font-family: var(--sans); transition: all .16s;
-  box-shadow: 0 1px 2px rgba(23,36,31,.05);
+  box-shadow: 0 1px 2px rgba(31,26,21,.05);
 }
 .sig-style:hover { border-color: rgba(178,58,42,.38); color: var(--cinnabar); }
 .sig-style[aria-pressed="true"] {
@@ -739,7 +752,7 @@ select {
   background: var(--card); border: 1px solid var(--line); border-radius: 4px;
   display: grid; place-items: center; padding: 10px; min-height: 150px;
   position: relative; overflow: hidden;
-  box-shadow: inset 0 1px 0 var(--paper-glow), 0 12px 26px -22px rgba(23,36,31,.28);
+  box-shadow: inset 0 1px 0 var(--paper-glow), 0 12px 26px -22px rgba(31,26,21,.28);
 }
 .sig-stage canvas { max-width: 100%; height: auto; display: block; }
 .sig-stage .seal {
@@ -760,7 +773,7 @@ select {
 }
 .empty-state .big {
   font-family: var(--serif); font-size: 42px; margin-bottom: 12px; letter-spacing: .1em;
-  /* Was #e0d3b9 at 1.41:1 鈥?the first thing after the hero, and it read as a
+  /* Was #e3d4bb at 1.41:1 鈥?the first thing after the hero, and it read as a
      ghost. 42px counts as large text, so 3:1 is the floor to clear. */
   color: #6f7f6a;
 }
@@ -1150,7 +1163,7 @@ select {
   background:none; border:0; cursor:pointer; border-radius: var(--radius-sm);
   font-size:18px; line-height:1; color:var(--ink-soft); padding:0;
 }
-.lang-hint .lh-close:hover { background:rgba(23,36,31,.07); color:var(--ink); }
+.lang-hint .lh-close:hover { background:rgba(31,26,21,.07); color:var(--ink); }
 
 @media (max-width:520px) {
   /* On a phone the sentence and the call to action cannot share a row without
@@ -1320,4 +1333,174 @@ select {
 @media print {
   .cw-controls, .cw-actions { display: none !important; }
   .cw { grid-template-columns: 1fr; }
+}
+
+/* =========================================================================
+   HOME REDESIGN
+   -------------------------------------------------------------------------
+   The landing page opens on a painted scene instead of a flat field: a
+   watercolour landscape behind the whole opening block, the form as a white
+   sheet overlapping its lower edge, a pale green plate under that, and four
+   feature columns headed by a pink roundel carrying the ordinal over the
+   glyph.
+
+   The painting is a real illustration (assets/img/hero-painting.webp, 1672x941,
+   97KB after re-encoding from a 2MB PNG), not something assembled from SVG
+   primitives. Hand-placed ellipses and rectangles read as cut paper no matter
+   how carefully they are shaded; only a painted image carries the bleeding
+   edges and the brush texture that make the composition read as 山水.
+
+   Three things matter for it to sit under the text rather than behind it:
+
+   1. It spans the full width and fades out at its own bottom edge, so there
+      is no horizontal seam where the picture stops.
+   2. The left third is veiled in the painting's own paper colour, because the
+      reference puts the headline over blank sky and the sky is not blank in
+      this crop.
+   3. The form card sits ON the bottom edge, not below it. A card that clears
+      the picture reads as two stacked sections; one that overlaps it reads as
+      a single composition.
+
+   Every selector below is scoped to something only the home pages render,
+   except .feat-grid-home, added to the home grid in _gen_home.cjs precisely
+   so the shared .feat component on other pages is untouched.
+   ========================================================================= */
+
+/* ---- ground ------------------------------------------------------------ */
+/* The header sat on celadon at 90% opacity and would read as a green bar over
+   a cream page. */
+.site-head { background: rgba(248,243,232,.93); }
+
+/* ---- the opening block ------------------------------------------------ */
+/* `cover` on a 16:9 picture inside a wider, shorter block crops top and
+   bottom. The reference keeps the waterline and the eaves, both of which sit
+   in the lower half, so the crop is anchored to the bottom edge. */
+.hero {
+  background-color: #f8f3e8;
+  background-image: url("/assets/img/hero-painting.webp");
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  padding: 56px 0 150px;
+  min-height: 470px;
+}
+/* The veil that gives the headline clean paper to sit on. It is the painting's
+   own sky colour, not white, so the left side reads as an unpainted area of
+   the same sheet rather than as a panel laid over the artwork. */
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(248,243,232,.97) 0%, rgba(248,243,232,.94) 24%, rgba(248,243,232,.72) 44%, rgba(248,243,232,.28) 62%, rgba(248,243,232,0) 78%),
+    linear-gradient(180deg, rgba(248,243,232,.5) 0%, rgba(248,243,232,0) 30%);
+}
+/* And the fade along the bottom edge, so the water dissolves into the paper
+   instead of ending on a ruled line. */
+.hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 170px;
+  pointer-events: none; z-index: 0;
+  background: linear-gradient(180deg, rgba(248,243,232,0) 0%, rgba(248,243,232,.66) 54%, rgba(248,243,232,.97) 100%);
+}
+/* The seal column stands in front of the trees on the right. */
+.hero-show { border-left-color: rgba(255,253,246,.5); z-index: 1; }
+
+/* ---- form: the sheet overlapping the painting ------------------------ */
+/* 104px up against 150px of hero padding leaves ~46px of painting visible
+   beneath the card, which reads as overlap without burying the water. */
+.form-card {
+  margin-top: -104px;
+  border-radius: 10px;
+  padding: 34px 34px 24px;
+  box-shadow: 0 26px 64px -36px rgba(40,32,24,.42), 0 2px 4px rgba(40,32,24,.04);
+}
+/* The cinnabar rule on the card top edge is retired: in the reference the
+   sheet has no accent stripe, and a red bar would cut across the waterline
+   it is now straddling. */
+.form-card::before { content: none; }
+
+/* ---- the pale plate under the form ----------------------------------- */
+.empty-state {
+  border-radius: 10px;
+  border-color: #cfdfd4;
+  padding: 54px 20px 48px;
+  background-color: #deeae1;
+  background-image:
+    radial-gradient(circle at 0% 100%, transparent 74px, rgba(255,255,255,.55) 75px, rgba(255,255,255,.55) 76px, transparent 77px),
+    radial-gradient(circle at 0% 100%, transparent 122px, rgba(255,255,255,.38) 123px, rgba(255,255,255,.38) 124px, transparent 125px),
+    radial-gradient(circle at 0% 100%, transparent 170px, rgba(255,255,255,.24) 171px, rgba(255,255,255,.24) 172px, transparent 173px),
+    radial-gradient(circle at 100% 100%, transparent 74px, rgba(255,255,255,.55) 75px, rgba(255,255,255,.55) 76px, transparent 77px),
+    radial-gradient(circle at 100% 100%, transparent 122px, rgba(255,255,255,.38) 123px, rgba(255,255,255,.38) 124px, transparent 125px),
+    radial-gradient(circle at 100% 100%, transparent 170px, rgba(255,255,255,.24) 171px, rgba(255,255,255,.24) 172px, transparent 173px),
+    linear-gradient(180deg, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 72%);
+}
+.empty-state .big {
+  font-size: 40px; font-weight: 600;
+  letter-spacing: .16em; text-indent: .16em;
+  color: var(--ink); margin: 0 auto 16px; line-height: 1.25;
+}
+.empty-state .big::before,
+.empty-state .big::after {
+  content: ""; display: inline-block; vertical-align: middle;
+  width: 92px; height: 1px; background: #7d9184; opacity: .5;
+  margin: 0 26px; text-indent: 0;
+}
+.empty-state p { color: #4d5b52; font-size: 14.5px; }
+
+/* ---- features: four columns, roundel heads --------------------------- */
+.feat-grid-home {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 34px;
+  border-top: 0;
+  padding-top: 4px;
+}
+.feat-grid-home > .feat { border-left: 0; padding: 0; }
+.feat-grid-home > .feat::before { content: none; }
+.feat-grid-home .ico[data-n] {
+  width: 62px; height: 62px;
+  border: 0; border-radius: 50%;
+  background: #f6dcd7;
+  color: var(--cinnabar);
+  font-size: 20px;
+  margin: 0 0 18px;
+  display: grid; place-items: center;
+  padding-top: 13px;
+  position: relative;
+}
+.feat-grid-home .ico[data-n]::before {
+  content: attr(data-n);
+  position: absolute; top: 11px; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--serif); font-size: 10.5px; line-height: 1;
+  opacity: .85;
+}
+.feat-grid-home > .feat:hover .ico[data-n] { background: #f1d0c9; }
+
+/* ---- narrow screens -------------------------------------------------- */
+@media (max-width: 1000px) {
+  .hero { padding-bottom: 130px; min-height: 420px; background-position: 62% bottom; }
+  .form-card { margin-top: -92px; }
+}
+@media (max-width: 860px) {
+  .feat-grid-home { grid-template-columns: 1fr; gap: 0; }
+  .feat-grid-home > .feat {
+    border-top: 1px solid var(--line);
+    padding: 22px 0 4px;
+  }
+  .feat-grid-home > .feat:first-child { border-top: 0; padding-top: 0; }
+}
+/* Below 820px the picture is cropped to a strip and there is no room for the
+   card to overlap anything, so the paper stands alone. */
+@media (max-width: 820px) {
+  .hero {
+    background-image: none;
+    padding-bottom: 84px;
+    min-height: 0;
+  }
+  .hero::before, .hero::after { content: none; }
+  .form-card { margin-top: -52px; }
+}
+@media (max-width: 520px) {
+  .empty-state { padding: 38px 16px 34px; }
+  .empty-state .big { font-size: 32px; letter-spacing: .1em; text-indent: .1em; }
+  .empty-state .big::before, .empty-state .big::after { width: 40px; margin: 0 14px; }
+  .form-card { padding: 24px 18px 18px; margin-top: -40px; }
 }

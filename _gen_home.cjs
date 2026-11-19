@@ -15,8 +15,12 @@ const { u } = require('./_assets.cjs');
 /* 必须写全 index.cjs：Node 的目录解析只认 index.js / index.json / index.node。 */
 const i18n = require('./_i18n/index.cjs');
 const {
-  ORIGIN, BRAND, SHIPPED, getLang, load, fmt, href, link, hreflang, canonical, langSwitch
+  ORIGIN, BRAND, SHIPPED, getLang, load, fmt, href, link, hreflang, canonical, langSwitch,
+  isTranslated
 } = i18n;
+/* The nav is shared so every generated page agrees on it; see _nav.cjs for why
+   the EN treatment has to be in one place rather than per generator. */
+const { navFor, footTools } = require('./_nav.cjs');
 const OG = require('./_og.cjs');
 
 const ROOT = path.join(__dirname, 'site');
@@ -155,12 +159,7 @@ ${JSON.stringify(jsonld, null, 2)}
   <div class="wrap">
     <a class="brand" href="${href(code, '/')}">${MARK}<span class="brand-name">${esc(BRAND)}</span></a>
     <nav class="site-nav">
-      <a href="${href(code, '/')}">${esc(t['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(t['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(t['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(t['nav.stroke'])}</a>
-      <a href="${href(code, '/characters/')}">${esc(t['nav.characters'])}</a>
-      <a href="${href(code, '/gifts/')}">${esc(t['nav.gifts'])}</a>
+${navFor(code, t)}
     </nav>
     ${langSwitch(code, pathFor)}
   </div>
@@ -262,24 +261,24 @@ ${JSON.stringify(jsonld, null, 2)}
     <div class="wrap">
       <h2>${esc(t['how.h2'])}</h2>
       <p class="lede">${esc(t['how.lede'])}</p>
-      <div class="feat-grid">
+      <div class="feat-grid feat-grid-home">
         <div class="feat" data-n="一">
-          <div class="ico">历</div>
+          <div class="ico" data-n="一">历</div>
           <h3>${esc(t['how.f1t'])}</h3>
           <p>${esc(t['how.f1p'])}</p>
         </div>
         <div class="feat" data-n="二">
-          <div class="ico">意</div>
+          <div class="ico" data-n="二">意</div>
           <h3>${esc(t['how.f2t'])}</h3>
           <p>${esc(t['how.f2p'])}</p>
         </div>
         <div class="feat" data-n="三">
-          <div class="ico">典</div>
+          <div class="ico" data-n="三">典</div>
           <h3>${esc(t['how.f3t'])}</h3>
           <p>${esc(t['how.f3p'])}</p>
         </div>
         <div class="feat" data-n="四">
-          <div class="ico">书</div>
+          <div class="ico" data-n="四">书</div>
           <h3>${esc(t['how.f4t'])}</h3>
           <p>${esc(t['how.f4p'])}</p>
         </div>
@@ -307,12 +306,7 @@ ${faqs.map(function (f) {
   <div class="wrap">
     <div class="foot-col">
       <h5>${esc(t['foot.tools'])}</h5>
-      <a href="${href(code, '/')}">${esc(t['nav.generator'])}</a>
-      <a href="${link(code, '/my-name-in-chinese/')}">${esc(t['nav.myname'])}</a>
-      <a href="${link(code, '/hanzi-to-pinyin/')}">${esc(t['nav.pinyin'])}</a>
-      <a href="${link(code, '/stroke-order/')}">${esc(t['nav.stroke'])}</a>
-      <a href="${href(code, '/characters/')}">${esc(t['nav.characters'])}</a>
-      <a href="${href(code, '/gifts/')}">${esc(t['nav.gifts'])}</a>
+${footTools(code, t)}
     </div>
     <div class="foot-col">
       <h5>${esc(t['foot.learn'])}</h5>

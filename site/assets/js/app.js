@@ -102,12 +102,19 @@
   })();
 
   /* ---------------- state ---------------- */
-  /* `avoid` holds the given names already shown in this session, so "Another
-     set" explores instead of re-dealing the same top pair every time. It is
-     carried in the URL as well, otherwise a shared link would restore a
-     different list from the one the sharer saw. */
+  /* `avoid` holds the given names already shown, so "Another set" explores
+     instead of re-dealing the same top pair. It is carried in the URL as well,
+     otherwise a shared link would restore a different list from the one the
+     sharer saw.
+
+     The cap matters in both places at once. The engine scores a character by
+     how often it has already appeared, so the session and the link have to
+     agree on the same window: if the session remembered more than the URL
+     carried, opening the link would silently draw a different batch. 120 names
+     is 24 batches of history and about 2.3 KB of URL once percent-encoded,
+     which keeps links exact for far longer than visitors actually click. */
   var state = { seed: 1, data: null, inputs: null, avoid: [], urlAvoid: [] };
-  var AVOID_MAX = 60;
+  var AVOID_MAX = 120;
 
   function readInputs() {
     var y = parseInt(els.by.value, 10);
@@ -184,7 +191,9 @@
   function render(data) {
     state.data = data;
 
-    /* Remember what the visitor has just been shown so the next draw moves on. */
+    /* Remember what the visitor has just been shown so the next draw moves on.
+       Capped at the same window the URL can carry, so what the page remembers
+       and what a shared link can restore never drift apart. */
     data.names.forEach(function (nm) {
       if (state.avoid.indexOf(nm.given) < 0) state.avoid.push(nm.given);
     });
@@ -260,12 +269,9 @@
      site is built around: a visitor who just got a name can learn the two
      characters they were given, which is the reason a naming tool and a
      character-learning tool belong on the same site. */
-  /* One anchor per character, each its own practice square. The square *is*
-     the link, so the row of squares lands on the character pages without a
-     second row of controls underneath. */
   function charLinks(nm) {
     return Array.from(nm.full).map(function (ch) {
-      return '<a class="hz-cell" href="' + href('/character/' + encodeURIComponent(ch) + '/') +
+      return '<a class="hz-link" href="' + href('/character/' + encodeURIComponent(ch) + '/') +
         '" title="' + esc(t('card.charlink', { ch: ch })) + '">' + esc(ch) + '</a>';
     }).join('');
   }
@@ -289,7 +295,7 @@
 
     card.innerHTML =
       '<div class="nc-main" role="button" tabindex="0" aria-expanded="false">' +
-        '<div class="nc-glyph" data-n="' + Array.from(nm.full).length + '">' +
+        '<div class="nc-glyph">' +
           '<span class="rk">' + String(nm.rank).padStart(2, '0') + '</span>' +
           '<span class="hz">' + charLinks(nm) + '</span>' +
         '</div>' +
@@ -329,7 +335,7 @@
     main.addEventListener('click', toggle);
     /* A click on a character inside the header means "tell me about this
        character", not "expand the card" — the link wins. */
-    $$('.hz-cell', card).forEach(function (a) {
+    $$('.hz-link', card).forEach(function (a) {
       a.addEventListener('click', function (e) { e.stopPropagation(); });
     });
     main.addEventListener('keydown', function (e) {
@@ -469,7 +475,7 @@
         strokeAnimationSpeed: 1.3,
         delayBetweenStrokes: 90,
         showOutline: true,
-        outlineColor: '#bccfc2'
+        outlineColor: '#cfdcd1'
       });
 
       var data = { strokes: [], medians: [] };
@@ -498,9 +504,9 @@
        carries the same celadon, 黛 ink and double frame the page does rather
        than a warm cream. A saved card that does not match the page it came from
        undoes the page's colours in the only place a stranger sees them. */
-    ctx.fillStyle = '#e0eae2';
+    ctx.fillStyle = '#eef3ee';
     ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = '#bccfc2';
+    ctx.strokeStyle = '#cfdcd1';
     ctx.lineWidth = 2;
     ctx.strokeRect(28, 28, W - 56, H - 56);
     ctx.lineWidth = 1;
@@ -510,7 +516,7 @@
     ctx.fillStyle = '#b23a2a';
     ctx.font = '600 26px Georgia, serif';
     ctx.fillText(SITE_NAME, 72, 100);
-    ctx.fillStyle = '#52645b';
+    ctx.fillStyle = '#5f7269';
     ctx.font = '400 22px Georgia, serif';
     ctx.fillText(SITE_HOST, 72, 134);
 
@@ -529,7 +535,7 @@
     ctx.fillText(nm.pinyin, (W - pw) / 2, nameY + 70);
 
     /* divider */
-    ctx.strokeStyle = '#bccfc2';
+    ctx.strokeStyle = '#cfdcd1';
     ctx.beginPath();
     ctx.moveTo(140, nameY + 120);
     ctx.lineTo(W - 140, nameY + 120);
@@ -542,7 +548,7 @@
       ctx.font = '600 52px "Songti SC","STSong",Georgia,serif';
       ctx.fillText(ch.c, 140, y);
 
-      ctx.fillStyle = '#3c4d46';
+      ctx.fillStyle = '#42544c';
       ctx.font = '400 26px -apple-system,Segoe UI,Arial,sans-serif';
       wrapText(ctx, ch.meaning, 240, y - 10, W - 380, 34);
 
@@ -550,7 +556,7 @@
       ctx.font = 'italic 22px Georgia, serif';
       ctx.fillText(ch.book, 240, y + 32);
 
-      ctx.fillStyle = '#52645b';
+      ctx.fillStyle = '#5f7269';
       ctx.font = '400 21px -apple-system,Segoe UI,Arial,sans-serif';
       wrapText(ctx, ch.lineEn, 240, y + 62, W - 380, 30);
 
@@ -571,7 +577,7 @@
     ctx.drawImage(sc, (W - 900) / 2, H - 330);
 
     /* footer */
-    ctx.fillStyle = '#52645b';
+    ctx.fillStyle = '#5f7269';
     ctx.font = '400 20px -apple-system,Segoe UI,Arial,sans-serif';
     ctx.fillText(t('cardexport.footer'), 72, H - 56);
 
@@ -636,10 +642,6 @@
 
   if (els.regen) {
     els.regen.addEventListener('click', function () {
-      /* The pool widens as names are used up, so a long session keeps
-         producing new names. Only clear the history once it is genuinely
-         large — otherwise the visitor sees old favourites again. */
-      if (state.avoid.length >= 50) state.avoid = [];
       state.seed += 1;
       var data = generate(state.seed);
       render(data);
