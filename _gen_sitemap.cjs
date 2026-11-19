@@ -10,12 +10,20 @@
  *      how a crawler learns that /pt/character/明/ and /character/明/ are the
  *      same page in two languages without having to fetch both first.
  *
- *   3. Split the output in two tiers. 480 character pages that differ only in
- *      which glyph they describe are the exact shape a new domain gets
- *      discounted for when it hands them all over at once, so they go into
- *      their own file and the index does not list it yet. sitemap.xml itself
- *      is a sitemapindex, not a urlset — a crawler that is handed a urlset
- *      listing one page never learns the rest exist.
+ *   3. Split the output in three tiers. 480 character pages that differ only in
+ *      which glyph they describe, and 36 carrier pages that describe a product
+ *      category, are the exact shapes a new domain gets discounted for when it
+ *      hands them all over at once. Both go into their own files and the index
+ *      does not list either yet. sitemap.xml itself is a sitemapindex, not a
+ *      urlset — a crawler that is handed a urlset listing one page never learns
+ *      the rest exist.
+ *
+ *      The carrier tier is a demand judgement, not a volume one: the ten
+ *      categories together draw roughly 620 searches a month while
+ *      "chinese name generator" alone draws 4,400, and the intent is
+ *      transactional on pages that explicitly do not sell anything. They stay
+ *      deployed and reachable from /gifts/; they are just not put in front of a
+ *      crawler until the core pages have standing.
  *
  * Only pages on disk are listed — a sitemap full of 404s is worse than none —
  * and only for locales in SHIPPED, so /ja/ and /es/ stay out of the file even
@@ -59,9 +67,13 @@ const PAGES = [
 /* One entry per carrier page, read from the same catalogue the generator uses.
    Hard-coding them here would let the sitemap and the pages disagree after a
    carrier is added, which is exactly the kind of silent gap the earlier
-   single-language sitemap had. */
+   single-language sitemap had.
+
+   These land in their own tier: the pages are real and stay linked from the
+   /gifts/ hub, but a new domain asking to be crawled for ten product categories
+   before it has any standing is the pattern the tiers exist to avoid. */
 require('./_gifts/catalog.cjs').forEach(function (item) {
-  PAGES.push({ p: '/gifts/' + item.slug + '/', priority: '0.7', changefreq: 'monthly', tier: 'core' });
+  PAGES.push({ p: '/gifts/' + item.slug + '/', priority: '0.7', changefreq: 'monthly', tier: 'gifts' });
 });
 
 function exists(code, p) {
@@ -143,10 +155,11 @@ function urlset(list) {
 
 const core = urls.filter(function (u) { return u.tier === 'core'; });
 const library = urls.filter(function (u) { return u.tier === 'library'; });
+const gifts = urls.filter(function (u) { return u.tier === 'gifts'; });
 
-/* Deliberately only sitemap-core.xml. sitemap-characters.xml is generated and
-   deployed but withheld until the core pages are indexed; adding it here is
-   the single switch that exposes the 480 character pages to Search Console. */
+/* Deliberately only sitemap-core.xml. The other two are generated and deployed
+   but withheld until the core pages are indexed; adding one here is the single
+   switch that exposes it to Search Console. */
 const index = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   '  <sitemap>\n' +
@@ -158,6 +171,7 @@ const index = '<?xml version="1.0" encoding="UTF-8"?>\n' +
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), index, 'utf8');
 fs.writeFileSync(path.join(ROOT, 'sitemap-core.xml'), urlset(core), 'utf8');
 fs.writeFileSync(path.join(ROOT, 'sitemap-characters.xml'), urlset(library), 'utf8');
+fs.writeFileSync(path.join(ROOT, 'sitemap-gifts.xml'), urlset(gifts), 'utf8');
 
 /* robots.txt — everything is public and static, so keep it permissive and
    just point at the sitemap. */
@@ -175,6 +189,6 @@ urls.forEach(function (u) {
   counts[code] = (counts[code] || 0) + 1;
 });
 console.log('sitemap: ' + urls.length + ' urls | core=' + core.length +
-  ' library=' + library.length + ' | ' +
+  ' gifts=' + gifts.length + ' library=' + library.length + ' | ' +
   Object.keys(counts).map(function (c) { return c + '=' + counts[c]; }).join(' ') +
   ' | robots.txt written');

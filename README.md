@@ -97,9 +97,11 @@ generated pages carry only page-specific rules.
 After editing `characters.js` or `characters2.js`:
 
 ```bash
+node _gen_i18n_asset.cjs # runtime string bundles for app.js
 node _gen_chars.cjs      # 120 character pages + the library index
 node _gen_gifts.cjs      # carrier pages
 node _gen_home.cjs       # the four home pages
+node _gen_404.cjs        # 404.html, one file, English
 node _unify_nav.cjs      # identical navigation on every page
 node _gen_sitemap.cjs    # sitemap.xml + robots.txt from pages that exist
 ```

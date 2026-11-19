@@ -1,0 +1,43 @@
+# Cache policy for Cloudflare Pages.
+#
+# Cloudflare applies every matching block in file order and JOINS repeated
+# headers with a comma. For Cache-Control that is not a merge, it is a
+# contradiction: `public, max-age=0, must-revalidate, public, max-age=31536000,
+# immutable` is one header holding two max-age values, and RFC 9111 leaves the
+# outcome to the cache. Nothing errors and the asset still serves, which is
+# exactly what makes it worth writing carefully.
+#
+# So the two policies here do not sit side by side hoping order saves them. The
+# broad block comes first, and the narrow one DETACHES the header before
+# setting its own: `! Cache-Control` removes what earlier blocks added, which is
+# the documented way for a narrower rule to win. The `!` line is
+# Cloudflare-specific and does nothing on Netlify — this file is written for
+# Cloudflare Pages.
+#
+#   /*          every page: revalidate, so a deploy is visible at once
+#   /404.html   no-store, because it is served for arbitrary wrong URLs
+#   /assets/*   one year, immutable, because every URL carries ?v=<hash>
+#
+# The immutable claim is only true while assets stay versioned. _assets.cjs
+# hashes the file bytes into ?v=, and the generators call it for everything
+# they emit: stylesheet, scripts, data files, the brand mark, gift photos, the
+# per-locale runtime bundles. Editing a file changes its URL, so a year-long
+# cache can never pin an old build. _check_assets_versioned.cjs is the guard —
+# run it before deploying, and a bare /assets/ path fails there instead of
+# silently freezing in visitors' browsers.
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# A 404 is served for whatever URL the visitor mistyped, so it must never be
+# stored: after a deploy changes the links in that page, the next visitor
+# should get the new ones rather than a copy from their disk.
+/404.html
+  ! Cache-Control
+  Cache-Control: no-store
+
+# The year-long rule. Safe only because the URL is the cache key: a changed
+# file has a changed URL, so nothing ever needs to be revalidated in place.
+/assets/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable

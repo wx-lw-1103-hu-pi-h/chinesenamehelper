@@ -12,7 +12,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { u } = require('./_assets.cjs');
+const { u, hashOf } = require('./_assets.cjs');
 /* 必须写全 index.cjs：Node 的目录解析只认 index.js / index.json / index.node，
    不会把 index.cjs 当作目录入口，require('./_i18n') 会直接抛 MODULE_NOT_FOUND。 */
 const i18n = require('./_i18n/index.cjs');
@@ -42,6 +42,18 @@ const SURNAMES = load('characters.js', 'SURNAMES');
 const REC = {};
 ALL.forEach(function (c) { if (c && c.c && !REC[c.c]) REC[c.c] = c; });
 const CHARS = Object.keys(REC);
+
+/* Stroke data version, per page.
+
+   The stroke JSON is fetched at runtime by HanziWriter, so there is no URL in
+   the template for the generator to version — the loader builds it from the
+   character it needs. Without a hash the request is a bare
+   /assets/hanzi-data/<c>.json, and under the one-year immutable rule in
+   _headers a corrected drawing would never reach a returning visitor.
+
+   Only this page's own character is injected, not the whole library: a page
+   draws one glyph, so a 120-entry table would be 2.4KB of dead weight on every
+   one of the 480 pages to answer a question only one entry is ever asked. */
 
 const ELEM_EN = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' };
 const ELEM_PR = { '木': 'Mù', '火': 'Huǒ', '土': 'Tǔ', '金': 'Jīn', '水': 'Shuǐ' };
@@ -398,11 +410,12 @@ ${footTools(code, t)}
   </div>
 </footer>
 
-<script src="/assets/lib/hanzi-writer.min.js"></script>
+<script src="${u('/assets/lib/hanzi-writer.min.js')}"></script>
 <script>
 (function () {
   var CH = ${JSON.stringify(ch)};
   var PY = ${JSON.stringify(py)};
+  var HZ_V = ${JSON.stringify(hashOf('/assets/hanzi-data/' + ch + '.json'))};
   /* Print-window strings come from the locale file, injected as JSON so the
      inline script never carries an English sentence on a Portuguese page. */
   var T = ${JSON.stringify({
@@ -439,8 +452,15 @@ ${footTools(code, t)}
       strokeAnimationSpeed: 1.1,
       delayBetweenStrokes: 120,
       charDataLoader: function (c, onComplete, onError) {
-        /* Shipped with the site — no third-party request at runtime. */
-        fetch('/assets/hanzi-data/' + encodeURIComponent(c) + '.json')
+        /* Shipped with the site — no third-party request at runtime.
+
+           The version is per character, not one constant for the folder:
+           each stroke file is hashed separately, so a corrected drawing
+           changes only its own URL. That is what lets _headers cache this
+           directory for a year — see _check_assets_versioned.cjs, which fails
+           the build if a request leaves here without a ?v=. */
+        var v = HZ_V || '';
+        fetch('/assets/hanzi-data/' + encodeURIComponent(c) + '.json' + (v ? '?v=' + v : ''))
           .then(function (r) { if (!r.ok) throw new Error('404'); return r.json(); })
           .then(onComplete)
           .catch(onError);

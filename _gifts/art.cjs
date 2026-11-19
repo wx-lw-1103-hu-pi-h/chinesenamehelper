@@ -371,29 +371,15 @@ ART.figure = frame(
   'A display base with the name engraved on its front edge'
 );
 
-/* ----------------------------------------------------------------- blade
-   Long and narrow, rotated so the vertical column is visibly the only
-   orientation that fits. Nothing points, nothing tapers — it reads as a
-   display piece, which is what it is. The scabbard has a lacquered sheen and
-   the fittings are metal, so the eye can tell the two materials apart. */
-ART.blade = frame(
-  '<g transform="rotate(-13 200 152)">' +
-    /* shadow along the lower edge */
-    '<rect x="46" y="140" width="308" height="48" rx="24" fill="#b3c9bd" opacity=".33"/>' +
-    /* scabbard body */
-    '<rect x="46" y="126" width="308" height="48" rx="24" fill="url(#cloth)" ' +
-    'stroke="' + LINE + '" stroke-width="1.4"/>' +
-    /* lacquer sheen: a long highlight down the upper third */
-    '<path d="M70 136 l260 0" stroke="#fbfefb" stroke-width="5" stroke-linecap="round" opacity=".8"/>' +
-    /* the two metal bands */
-    '<rect x="96" y="124" width="13" height="52" rx="5" fill="url(#metal)" stroke="#b09a5f" stroke-width="1"/>' +
-    '<rect x="286" y="124" width="13" height="52" rx="5" fill="url(#metal)" stroke="#b09a5f" stroke-width="1"/>' +
-    /* the chape at the far end */
-    '<path d="M340 126 q14 24 0 48 q-10 0 -10 -24 q0 -24 10 -24 z" fill="url(#metal)" stroke="#b09a5f" stroke-width="1"/>' +
-    cut(200, 150, 30, { depth: .9 }) +
-  '</g>',
-  'A long display piece with the name along its length'
-);
+/* ----------------------------------------------------------------- drop
+
+The blade that used to be drawn here is gone, not hidden. A display sword was
+one illustration and one catalog entry that the site no longer makes a page
+for — see the note in catalog.cjs for why it was removed. Leaving the drawing
+and its anchor behind would keep writing /assets/img/gifts/blade.svg and
+blade-blank.svg on every build: files nothing links to, that a crawler would
+find as orphans, and that _headers would cache for a year after they stopped
+being ours to serve. */
 
 module.exports = { ART, SAMPLE };
 
@@ -424,8 +410,7 @@ const ANCHORS = {
   daily: [{ x: 184, y: 166, size: 56, mark: 'print', ink: 'ink' }],
   wear: [{ x: 200, y: 162, size: 44, mark: 'print', ink: 'ink' }],
   plush: [{ x: 200, y: 170, size: 52, mark: 'cut', ink: 'ink' }],
-  figure: [{ x: 200, y: 260, size: 30, mark: 'cut', ink: 'ink' }],
-  blade: [{ x: 200, y: 150, size: 30, mark: 'cut', ink: 'ink' }]
+  figure: [{ x: 200, y: 260, size: 30, mark: 'cut', ink: 'ink' }]
 };
 
 /* Each coordinate above is copied from the cut()/print() call that draws the
@@ -438,7 +423,6 @@ const ANCHORS = {
      daily       280 print(184,166,56)
      wear        302 print(200,162,44)
      plush       332 cut(200,170,52)
-     figure      367 cut(200,260,30)
-     blade       390 cut(200,150,30) */
+     figure      367 cut(200,260,30) */
 module.exports.ANCHORS = ANCHORS;
 module.exports.setBlank = setBlank;

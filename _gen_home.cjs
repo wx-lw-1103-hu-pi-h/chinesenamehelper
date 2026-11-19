@@ -323,15 +323,15 @@ ${footTools(code, t)}
 
 <div class="toast" id="toast" role="status"></div>
 
-<script src="/assets/lib/lunar.js"></script>
+<script src="${u('/assets/lib/lunar.js')}"></script>
 <script src="${u('/assets/data/characters.js')}"></script>
 <script src="${u('/assets/data/characters2.js')}"></script>
 <script src="${u('/assets/js/engine.js')}"></script>
-<script src="/assets/lib/hanzi-writer.min.js" defer></script>
+<script src="${u('/assets/lib/hanzi-writer.min.js')}" defer></script>
 <script src="${u('/assets/js/signature.js')}"></script>
 <!-- Runtime strings for this locale: the cards, the chart strip and every toast
      are built in app.js after a click, so they cannot be baked into the HTML. -->
-<script src="/assets/i18n/${code}.js"></script>
+<script src="${u('/assets/i18n/' + code + '.js')}"></script>
 <script src="${u('/assets/js/app.js')}"></script>
 <!-- A hint only: it reads the browser language and offers a link, never
      redirects. See lang-hint.js for why a redirect would cost the translations

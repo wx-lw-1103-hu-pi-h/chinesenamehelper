@@ -147,14 +147,22 @@ for (const pagePath of EN_ONLY) {
     if (block) s = s.replace(canonRe, function (m) { return m + '\n' + block; });
   }
 
-  /* ---- stylesheet: same versioned URL as the generated pages ----
-     These three were hand-written and point at the bare path. The generator
-     emits ?v=<hash> so a changed stylesheet invalidates cache without a purge;
-     leaving these on the bare path means a returning visitor keeps the old CSS
-     and a newly added rule silently does nothing on exactly the pages that
-     carry the most prose. Idempotent: the u() call yields one canonical URL. */
-  s = s.replace(/<link rel="stylesheet" href="\/assets\/css\/main\.css(?:\?v=[a-f0-9]+)?">/g,
-    '<link rel="stylesheet" href="' + u('/assets/css/main.css') + '">');
+  /* ---- every /assets/ URL on these pages, versioned like the generated ones.
+     These three were hand-written and point at bare paths: the stylesheet, the
+     brand mark, app-foot.js, and a handful of data and script files each page
+     loads. The generators emit ?v=<hash> so a changed file invalidates cache
+     without a purge. Leaving any of these bare means a returning visitor keeps
+     the old copy for a year under the immutable rule in _headers, and a change
+     silently does nothing on exactly the pages that carry the most prose.
+
+     One generic pass rather than a list of filenames: a list is a second place
+     to forget when a page starts loading something new. The value has to begin
+     with /assets/ for the rule to fire, so the absolute og:image URLs are left
+     alone — rewriting one to a relative path would break the unfurl, and a
+     crawler does not have a cache to invalidate. Idempotent: an existing ?v=
+     is swallowed by the optional group and u() writes the current hash. */
+  s = s.replace(/(=")(\/assets\/[^"?]+)(?:\?v=[a-f0-9]+)?(")/g,
+    function (m, open, url, close) { return open + u(url) + close; });
 
   /* ---- the hero watermark attribute is no longer styled ---- */
   s = s.replace(/<div class="wrap" data-mark="[^"]*">/g, '<div class="wrap">');

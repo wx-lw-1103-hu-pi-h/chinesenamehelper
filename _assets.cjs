@@ -30,4 +30,19 @@ function u(urlPath) {
   return urlPath + '?v=' + hashOf(urlPath);
 }
 
-module.exports = { u, hashOf };
+/* Same as u(), for a path that contains non-ASCII segments.
+
+   The stroke data sits at /assets/hanzi-data/中.json on disk, but the URL a
+   browser asks for is percent-encoded. Hashing needs the on-disk name; the
+   output needs the encoded one. Passing either form to u() would be wrong in
+   one direction — encoded hashes a file that does not exist, raw emits a URL
+   that does not match the canonical form the rest of the site uses — so both
+   are derived from the raw path here. */
+function uEncoded(rawPath) {
+  const encoded = rawPath.split('/').map(function (seg) {
+    return seg ? encodeURIComponent(seg) : seg;
+  }).join('/');
+  return encoded + '?v=' + hashOf(rawPath);
+}
+
+module.exports = { u, uEncoded, hashOf };

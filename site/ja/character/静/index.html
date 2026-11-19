@@ -322,11 +322,12 @@
   </div>
 </footer>
 
-<script src="/assets/lib/hanzi-writer.min.js"></script>
+<script src="/assets/lib/hanzi-writer.min.js?v=14b345a9"></script>
 <script>
 (function () {
   var CH = "静";
   var PY = "jìng";
+  var HZ_V = "36acaed7";
   /* Print-window strings come from the locale file, injected as JSON so the
      inline script never carries an English sentence on a Portuguese page. */
   var T = {"practisetitle":"「{ch}」を練習する","practiseh1":"漢字練習シート","practisesub":"薄い字をなぞってから、自分で書いてください。chinesenamehelper.com","perfect":"完璧です — 修正なし","donecorr":"完了 · {n} 回の修正","host":"chinesenamehelper.com"};
@@ -356,8 +357,15 @@
       strokeAnimationSpeed: 1.1,
       delayBetweenStrokes: 120,
       charDataLoader: function (c, onComplete, onError) {
-        /* Shipped with the site — no third-party request at runtime. */
-        fetch('/assets/hanzi-data/' + encodeURIComponent(c) + '.json')
+        /* Shipped with the site — no third-party request at runtime.
+
+           The version is per character, not one constant for the folder:
+           each stroke file is hashed separately, so a corrected drawing
+           changes only its own URL. That is what lets _headers cache this
+           directory for a year — see _check_assets_versioned.cjs, which fails
+           the build if a request leaves here without a ?v=. */
+        var v = HZ_V || '';
+        fetch('/assets/hanzi-data/' + encodeURIComponent(c) + '.json' + (v ? '?v=' + v : ''))
           .then(function (r) { if (!r.ok) throw new Error('404'); return r.json(); })
           .then(onComplete)
           .catch(onError);

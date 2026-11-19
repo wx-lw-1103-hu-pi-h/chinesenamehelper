@@ -16,7 +16,7 @@ module.exports = {
   'nav.pinyin': 'Hanzi to pinyin',
   'nav.stroke': 'Stroke order',
   'nav.characters': 'Characters',
-  'nav.gifts': 'Carriers',
+  'nav.gifts': 'Gifts',
   'foot.tools': 'Tools',
   'foot.learn': 'Learn',
   'foot.how': 'How the naming works',

@@ -56,8 +56,10 @@ const PAGES = SHIPPED.reduce((acc, code) => acc.concat(pagesFor(code)), []);
 const KNOWN = new Set(PAGES.map(x => x.url));
 
 /* Every route a link may legitimately point at, plus the files served as
-   themselves rather than as routes. */
-const STATIC_FILES = ['/favicon.svg', '/robots.txt', '/sitemap.xml'];
+   themselves rather than as routes. The three sitemaps are here because a page
+   links at none of them but the crawl requests each child below. */
+const STATIC_FILES = ['/favicon.svg', '/robots.txt', '/sitemap.xml', '/sitemap-core.xml',
+  '/sitemap-characters.xml', '/sitemap-gifts.xml'];
 
 /* The alternate set a page is supposed to declare. The switcher is rendered
    from the same list, so an empty answer means "this page is English-only"
@@ -174,11 +176,19 @@ function actualAlternates(body) {
   }
   const locSet = new Set(locs);
   /* Pages in a generated-but-unlisted child are excluded from "missing": they
-     are intentionally withheld from the index until the core set is indexed. */
-  const held = await get('/sitemap-characters.xml');
-  const heldSet = new Set(held.status === 200
-    ? [...held.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].replace(ORIGIN, ''))
-    : []);
+     are intentionally withheld from the index until the core set is indexed.
+     There are two such children now — the character library and the gift
+     subpages — because both were split out of core for the same reason: the
+     core set is what should be crawled first, and a 500-URL sitemap teaches a
+     crawler nothing about which pages matter. */
+  const held = [];
+  for (const child of ['/sitemap-characters.xml', '/sitemap-gifts.xml']) {
+    const res = await get(child);
+    if (res.status !== 200) { console.log('  FAIL held-back child ' + child + ' -> ' + res.status); continue; }
+    const locs = [...res.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].replace(ORIGIN, ''));
+    held.push({ file: child, locs: locs });
+  }
+  const heldSet = new Set([].concat.apply([], held.map(h => h.locs)));
   const notInSitemap = [...KNOWN].filter(u => !locSet.has(u) && !heldSet.has(u));
   const inSitemapOnly = locs.filter(u => !KNOWN.has(u));
   const dupeLocs = locs.filter((u, i) => locs.indexOf(u) !== i);
@@ -193,11 +203,34 @@ function actualAlternates(body) {
   notInSitemap.slice(0, 8).forEach(u => console.log('  - not listed:', u));
   inSitemapOnly.slice(0, 8).forEach(u => console.log('  - stale entry:', u));
 
-  /* The held-back file must be a strict subset of the real routes. A loc in it
-     that no page answers is a 404 waiting to be published with one edit. */
-  const heldUnknown = [...heldSet].filter(u => !KNOWN.has(u));
-  console.log('  held-back file:', held.status, '| not a real route:', heldUnknown.length);
-  heldUnknown.slice(0, 8).forEach(u => console.log('  - not a route:', u));
+  /* The held-back files must each be a strict subset of the real routes. A loc
+     in one that no page answers is a 404 waiting to be published with a single
+     edit to the index. */
+  for (const h of held) {
+    const unknown = h.locs.filter(u => !KNOWN.has(u));
+    console.log('  held-back ' + h.file + ': ' + h.locs.length + ' locs | not a real route: ' + unknown.length);
+    unknown.slice(0, 8).forEach(u => console.log('  - not a route:', u));
+  }
+  /* Nothing may appear in two children: the same URL listed twice is a
+     duplicate signal, and it also means the split leaked. */
+  const dup = [].concat.apply([], held.map(h => h.locs)).filter(u => locSet.has(u));
+  console.log('  overlap between held-back and indexed:', dup.length);
+  dup.slice(0, 8).forEach(u => console.log('  - listed twice:', u));
+
+  /* --- deployment artefacts a host will read, not a visitor ---
+
+     Checked once rather than per page. A 404 document that exists but is not
+     wired up on the host is indistinguishable from a missing one until the
+     first typo, and a _headers file that lost its /assets/ rule would take a
+     year to notice — so both are asserted here, cheaply. */
+  const nf = await get('/404.html');
+  console.log('\n404.html:', nf.status,
+    '| noindex:', /<meta name="robots" content="noindex/.test(nf.body),
+    '| links home:', nf.body.includes('href="/"'));
+  const hd = await get('/_headers');
+  console.log('_headers:', hd.status,
+    '| /assets rule:', /\/assets\/\*[\s\S]{0,120}?immutable/.test(hd.body),
+    '| html revalidate:', /max-age=0, must-revalidate/.test(hd.body));
 
   /* --- spot-check one page per locale in detail --- */
   for (const code of SHIPPED) {

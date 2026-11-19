@@ -105,14 +105,5 @@ window.GIFT_ANCHORS = {
       "mark": "cut",
       "ink": "ink"
     }
-  ],
-  "blade": [
-    {
-      "x": 200,
-      "y": 150,
-      "size": 30,
-      "mark": "cut",
-      "ink": "ink"
-    }
   ]
 };

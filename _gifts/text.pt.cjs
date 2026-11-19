@@ -162,19 +162,6 @@ module.exports = {
     blurb: 'A base é lida de cima e de relance, então a inscrição fica curta e a placa, pequena.',
     aside: 'Lida de cima'
   },
-  blade: {
-    title: 'Espada decorativa e boken de bambu — sem fio, apenas decoração',
-    desc: 'Uma katana de exposição ou shinai de bambu com seu nome chinês, sem fio e decorativa: o que pode ser inscrito, onde, e o que esperar do envio internacional.',
-    name: 'Lâmina decorativa',
-    h1a: 'Peças de exposição,',
-    h1b: 'sem fio',
-    sub: 'São peças de parede e de suporte — sem fio, decorativas e não feitas para uso. O nome vai na bainha ou na face plana da lâmina, nunca num fio, porque não há fio.',
-    layout: 'Vertical ao longo da bainha ou da face da lâmina, seguindo a linha do objeto. É o suporte em que a coluna vertical não é escolha estética, mas a única orientação que cabe numa superfície longa e estreita.',
-    which: 'Um caractere com até 16 traços fica bem ao longo da face da lâmina. Um nome completo de três caracteres é longo demais para a largura e precisa correr pela bainha, onde a superfície é mais larga.',
-    qualify: 'Dois pontos práticos antes de tudo. Réplicas de lâmina são restritas ou exigem declaração em muitos países de destino, então o envio internacional pode falhar depois do pedido feito. E a inscrição é uma marca decorativa num objeto de exposição — nada aqui é afiado e nada é vendido como arma.',
-    blurb: 'Só peças de exposição, sem fio: o nome vai na bainha ou na face plana da lâmina, nunca na borda.',
-    aside: 'Sem fio, decorativo'
-  },
 
   /* ---------- shared labels ---------- */
   'label.which': 'Quais caracteres funcionam aqui',

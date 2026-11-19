@@ -225,9 +225,14 @@ function hubPage(code) {
 
   const cards = CATALOG.map(function (item) {
     const c = t[item.slug];
-    const thumb = item.photo
+    /* u() not the bare path: _headers gives /assets/* a one-year immutable
+       cache, so the URL has to be the cache key. A carrier whose photo is
+       replaced keeps its filename, and a bare /assets/img/gifts/tea.jpg would
+       then be frozen in every returning browser for a year. Hashing costs one
+       read per distinct file and makes the swap visible immediately. */
+    const thumb = u(item.photo
       ? '/assets/img/gifts/' + item.photo
-      : '/assets/img/gifts/' + item.image + '.svg';
+      : '/assets/img/gifts/' + item.image + '.svg');
     return `        <a class="gift-card" href="${href(code, '/gifts/' + item.slug + '/')}">
           <div class="gift-thumb"><img class="${item.photo ? 'gift-photo' : ''}" src="${thumb}" width="400" height="300" alt="${esc(plain(c.title))}" loading="lazy"></div>
           <div class="gift-card-body">
@@ -296,6 +301,12 @@ function carrierPage(code, item) {
   const s = samplesFor(item);
 
   const charsLabel = item.fit.chars === 1 ? '1' : '1–' + item.fit.chars;
+  /* Same cache-key rule as the hub cards: the photo on this page is the one
+     most likely to be replaced later, and a bare path would pin the old one in
+     every returning browser for a year once _headers ships. */
+  const hero = u(item.photo
+    ? '/assets/img/gifts/' + item.photo
+    : '/assets/img/gifts/' + item.image + '.svg');
 
   const jsonld = {
     '@context': 'https://schema.org',
@@ -480,7 +491,7 @@ function carrierPage(code, item) {
   <section class="section">
     <div class="wrap">
       <figure class="gift-fig">
-        <img class="${item.photo ? 'gift-photo' : ''}" src="${item.photo ? '/assets/img/gifts/' + item.photo : '/assets/img/gifts/' + item.image + '.svg'}" width="400" height="300" alt="${esc(plain(c.title))}">
+        <img class="${item.photo ? 'gift-photo' : ''}" src="${hero}" width="400" height="300" alt="${esc(plain(c.title))}">
         <figcaption>${esc(c.aside)}${item.photo ? '' : ' · ' + esc(t['label.placeholder'])}</figcaption>
       </figure>
       <div class="gift-stats">

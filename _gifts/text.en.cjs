@@ -16,9 +16,9 @@ module.exports = {
   /* ---------- hub page ---------- */
   'hub.title': 'Put Your Chinese Name on Something Real — Seal, Pendant, Tea Set, Fan',
   'hub.desc': 'Your Chinese name is chosen: now put it on something. Seals, pendants, teaware, fans, stationery, apparel, plush and display bases, with guidance on which characters stay legible on each.',
-  'hub.ogtitle': 'Carriers for your Chinese name',
+  'hub.ogtitle': 'Chinese name gifts: seal, pendant, tea set, fan',
   'hub.ogdesc': 'Which characters survive at seal size, and which need a scroll. A guide to turning a chosen Chinese name into a physical object.',
-  'hub.eyebrow': 'Name · Carrier',
+  'hub.eyebrow': 'Name · Gift',
   'hub.h1a': 'Your name, on something',
   'hub.h1b': 'you keep',
   'hub.sub': 'A Chinese name is a design, not just a label. These are the objects people actually put one on — and what each object demands of the characters you chose.',
@@ -162,31 +162,18 @@ module.exports = {
     blurb: 'The base is read at a glance from above, so the inscription stays short and the plate stays small.',
     aside: 'Read from above'
   },
-  blade: {
-    title: 'Display Sword and Bamboo Blade — Unsharpened, Decorative Only',
-    desc: 'A display katana or bamboo shinai carrying your Chinese name, unsharpened and decorative: what can be inscribed, where, and what to expect from cross-border shipping.',
-    name: 'Display blade',
-    h1a: 'Display pieces,',
-    h1b: 'unsharpened',
-    sub: 'These are wall and stand pieces — unsharpened, decorative, and not made for use. The name goes on the scabbard or the blade flat, never on an edge, because there is no edge.',
-    layout: 'Vertical along the scabbard or the blade flat, following the line of the object. This is the carrier where the vertical column is not a stylistic choice but the only orientation that fits a long narrow surface.',
-    which: 'One character at 16 strokes or fewer sits well along a blade flat. A full three-character name is too long for the width and has to run along the scabbard instead, where the surface is wider.',
-    qualify: 'Two practical points before anything else. Blade replicas are restricted or require declaration in many destination countries, so cross-border shipping can fail after the order is placed. And the inscription is a decorative marking on a display object — nothing here is sharpened, and nothing is sold as a weapon.',
-    blurb: 'Display pieces only, unsharpened, with the name on the scabbard or the flat — never on an edge.',
-    aside: 'Unsharpened, decorative'
-  },
 
   /* ---------- shared labels ---------- */
   'label.which': 'Which characters work here',
   'label.layout': 'Why it is laid out this way',
   'label.qualify': 'Before you commit',
   'label.samples': 'Characters that suit this carrier',
-  'label.more': 'Other carriers',
-  'label.all': 'All carriers',
+  'label.more': 'Other gifts',
+  'label.all': 'All gifts',
   'label.view': 'Read the guide',
-  'label.crumb': 'Carriers',
+  'label.crumb': 'Gifts',
   'label.placeholder': 'Illustration, not the finished piece',
-  'nav.gifts': 'Carriers',
+  'nav.gifts': 'Gifts',
 
   /* Kept for the sample grid: the reason a character was picked, in words the
      page can print without exposing the stroke arithmetic. */

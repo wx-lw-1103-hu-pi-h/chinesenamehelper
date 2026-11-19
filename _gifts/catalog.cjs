@@ -13,12 +13,18 @@
  *      write on. That is the line between this site's subject and a generic
  *      affiliate catalogue.
  *
- *   2. Nothing here is a weapon. `blade` exists because katana and shinai
- *      replicas are a real display market, but every entry is marked unsharpened
- *      and decorative, and the blade page says so before anything else. Edged
- *      goods cannot be shipped across most borders without a declaration, and a
- *      single restricted category can pull a whole site into a review that has
- *      nothing to do with its actual subject.
+ *   2. Nothing here is a weapon. This used to carry a `blade` entry — display
+ *      katana and shinai pieces, unsharpened, clearly marked decorative — on the
+ *      argument that it is sold and searched as a display object rather than an
+ *      edged tool. It has been removed. Stripe's prohibited list names only
+ *      "illegal weapons and accessories" and improperly marked firearm
+ *      replicas, so an unsharpened display sword is not prohibited today; but
+ *      its published guidance also puts weapons-related businesses under review,
+ *      and payment acceptance is judged on the business as a whole. Carrying ten
+ *      searches a month is not worth putting a weapons label on a site whose
+ *      subject is names, especially once payments are switched on. Should the
+ *      category ever come back, it comes back after the account is approved and
+ *      with an explicit answer from the processor, not before.
  *
  * `fit` is the interesting part. A character that reads clearly when engraved
  * on a 12 mm seal is not the same character that works on a hanging scroll —
@@ -121,17 +127,6 @@ module.exports = [
     image: 'figure',
     /* Engraved on a base plate and read from above, often at a glance. */
     fit: { chars: 2, maxStrokes: 12, layout: 'horizontal', stones: [] },
-    featured: true
-  },
-  {
-    slug: 'blade',
-    icon: '锋',
-    image: 'blade',
-    photo: 'blade.jpg',
-    /* Display pieces only. The blade page leads with the unsharpened notice,
-       and the fit rule stays shallow so a long inscription is not suggested on
-       a surface that is usually only seen in profile. */
-    fit: { chars: 1, maxStrokes: 16, layout: 'vertical', stones: ['钢'] },
     featured: true
   }
 ];
